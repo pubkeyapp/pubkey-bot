@@ -5,6 +5,8 @@ export const validationSchema = Joi.object({
   AUTH_DISCORD_ENABLED: Joi.boolean().default(true),
   AUTH_PASSWORD_ENABLED: Joi.boolean().default(true),
   AUTH_REGISTER_ENABLED: Joi.boolean().default(true),
+  CLOAK_KEYCHAIN: Joi.string().required(),
+  CLOAK_MASTER_KEY: Joi.string().required(),
   COOKIE_NAME: Joi.string().default('__session'),
   DATABASE_PROVISION: Joi.boolean().default(false),
   DATABASE_RANDOM_DATA: Joi.boolean().default(false),
