@@ -1,0 +1,24 @@
+{
+  "generators": {
+    "api-feature": {
+      "factory": "./src/generators/api-feature/api-feature-generator",
+      "schema": "./src/generators/api-feature/api-feature-schema.json",
+      "description": "api-feature generator"
+    },
+    "prisma-model": {
+      "factory": "./src/generators/prisma-model/prisma-model-generator",
+      "schema": "./src/generators/prisma-model/prisma-model-schema.json",
+      "description": "prisma-model generator"
+    },
+    "setup": {
+      "factory": "./src/generators/setup/setup-generator",
+      "schema": "./src/generators/setup/setup-schema.json",
+      "description": "setup generator"
+    },
+    "web-feature": {
+      "factory": "./src/generators/web-feature/web-feature-generator",
+      "schema": "./src/generators/web-feature/web-feature-schema.json",
+      "description": "web-feature generator"
+    }
+  }
+}

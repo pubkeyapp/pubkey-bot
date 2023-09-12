@@ -1,0 +1,236 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api-feature generator should generate the feature libraries 1`] = `
+"export * from './lib/api-test-data-access.module';
+export * from './lib/api-test.service';
+export * from './lib/entity/test.entity';
+export * from './lib/entity/test-paging.entity';
+export * from './lib/dto/admin-create-test.input';
+export * from './lib/dto/admin-find-many-test.input';
+export * from './lib/dto/admin-update-test.input';
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 2`] = `
+"import { Injectable } from '@nestjs/common';
+import { ApiCoreService } from '@proj/api/core/data-access';
+import { AdminCreateTestInput } from './dto/admin-create-test.input';
+import { AdminFindManyTestInput } from './dto/admin-find-many-test.input';
+import { AdminUpdateTestInput } from './dto/admin-update-test.input';
+import { TestPaging } from './entity/test-paging.entity';
+import { getAdminTestWhereInput } from './helpers/get-admin-test-where.input';
+
+@Injectable()
+export class ApiTestAdminService {
+  constructor(private readonly core: ApiCoreService) {}
+
+  async createTest(input: AdminCreateTestInput) {
+    return this.core.data.test.create({ data: input });
+  }
+
+  async deleteTest(testId: string) {
+    const deleted = await this.core.data.test.delete({ where: { id: testId } });
+    return !!deleted;
+  }
+
+  async findManyTest(input: AdminFindManyTestInput): Promise<TestPaging> {
+    return this.core.data.test
+      .paginate({
+        orderBy: { name: 'asc' },
+        where: getAdminTestWhereInput(input),
+      })
+      .withPages({ limit: input.limit, page: input.page })
+      .then(([data, meta]) => ({ data, meta }));
+  }
+
+  async findOneTest(testId: string) {
+    return this.core.data.test.findUnique({ where: { id: testId } });
+  }
+
+  async updateTest(testId: string, input: AdminUpdateTestInput) {
+    return this.core.data.test.update({ where: { id: testId }, data: input });
+  }
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 3`] = `
+"import { Module } from '@nestjs/common';
+import { ApiCoreDataAccessModule } from '@proj/api/core/data-access';
+import { ApiTestAdminService } from './api-test-admin.service';
+
+import { ApiTestService } from './api-test.service';
+
+@Module({
+  imports: [ApiCoreDataAccessModule],
+  providers: [ApiTestService, ApiTestAdminService],
+  exports: [ApiTestService],
+})
+export class ApiTestDataAccessModule {}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 4`] = `
+"import { Injectable } from '@nestjs/common';
+import { ApiCoreService } from '@proj/api/core/data-access';
+import { ApiTestAdminService } from './api-test-admin.service';
+
+@Injectable()
+export class ApiTestService {
+  constructor(
+    private readonly core: ApiCoreService,
+    readonly admin: ApiTestAdminService
+  ) {}
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 5`] = `
+"import { Field, InputType } from '@nestjs/graphql';
+
+@InputType()
+export class AdminCreateTestInput {
+  @Field()
+  name!: string;
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 6`] = `
+"import { Field, InputType, Int } from '@nestjs/graphql';
+import { PagingInput } from '@proj/api/core/data-access';
+
+@InputType()
+export class AdminFindManyTestInput extends PagingInput() {
+  @Field({ nullable: true })
+  search?: string;
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 7`] = `
+"import { Field, InputType } from '@nestjs/graphql';
+
+@InputType()
+export class AdminUpdateTestInput {
+  @Field({ nullable: true })
+  name?: string;
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 8`] = `
+"import { Prisma } from '@prisma/client';
+import { AdminFindManyTestInput } from '../dto/admin-find-many-test.input';
+
+export function getAdminTestWhereInput(
+  input: AdminFindManyTestInput
+): Prisma.TestWhereInput {
+  const where: Prisma.TestWhereInput = {};
+
+  if (input.search) {
+    where.OR = [
+      { id: { contains: input.search, mode: 'insensitive' } },
+      { name: { contains: input.search, mode: 'insensitive' } },
+    ];
+  }
+
+  return where;
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 9`] = `
+"import { Field, ObjectType } from '@nestjs/graphql';
+
+@ObjectType()
+export class Test {
+  @Field()
+  id!: string;
+  @Field({ nullable: true })
+  createdAt?: Date;
+  @Field({ nullable: true })
+  updatedAt?: Date;
+  @Field()
+  name!: string;
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 10`] = `
+"import { ObjectType } from '@nestjs/graphql';
+import { PagingResponse } from '@proj/api/core/data-access';
+import { Test } from './test.entity';
+
+@ObjectType()
+export class TestPaging extends PagingResponse<Test>(Test) {}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 11`] = `
+"export * from './lib/api-test-feature.module';
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 12`] = `
+"import { Resolver } from '@nestjs/graphql';
+import { ApiTestService } from '@proj/api/test/data-access';
+import { ApiAuthGraphQLAdminGuard } from '@proj/api/auth/data-access';
+import { Mutation, Query, Args } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import {
+  AdminCreateTestInput,
+  AdminFindManyTestInput,
+  Test,
+  TestPaging,
+  AdminUpdateTestInput,
+} from '@proj/api/test/data-access';
+
+@Resolver()
+@UseGuards(ApiAuthGraphQLAdminGuard)
+export class ApiTestAdminResolver {
+  constructor(private readonly service: ApiTestService) {}
+
+  @Mutation(() => Test, { nullable: true })
+  adminCreateTest(@Args('input') input: AdminCreateTestInput) {
+    return this.service.admin.createTest(input);
+  }
+
+  @Mutation(() => Boolean, { nullable: true })
+  adminDeleteTest(@Args('testId') testId: string) {
+    return this.service.admin.deleteTest(testId);
+  }
+
+  @Query(() => TestPaging, { nullable: true })
+  adminFindManyTest(@Args('input') input: AdminFindManyTestInput) {
+    return this.service.admin.findManyTest(input);
+  }
+
+  @Query(() => Test, { nullable: true })
+  adminFindOneTest(@Args('testId') testId: string) {
+    return this.service.admin.findOneTest(testId);
+  }
+
+  @Mutation(() => Test, { nullable: true })
+  adminUpdateTest(
+    @Args('testId') testId: string,
+    @Args('input') input: AdminUpdateTestInput
+  ) {
+    return this.service.admin.updateTest(testId, input);
+  }
+}
+"
+`;
+
+exports[`api-feature generator should generate the feature libraries 13`] = `
+"import { Module } from '@nestjs/common';
+import { ApiTestDataAccessModule } from '@proj/api/test/data-access';
+import { ApiTestAdminResolver } from './api-test-admin.resolver';
+
+@Module({
+  imports: [ApiTestDataAccessModule],
+  providers: [ApiTestAdminResolver],
+})
+export class ApiTestFeatureModule {}
+"
+`;
