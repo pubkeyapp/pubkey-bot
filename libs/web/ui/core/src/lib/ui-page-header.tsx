@@ -9,15 +9,19 @@ export function UiPageHeader({
   actions,
 }: {
   children?: ReactNode
-  title: string
+  title: ReactNode
   actions?: ReactNode
 }) {
   return (
     <UiCard>
       <UiGroup>
-        <Text size="xl" weight={700}>
-          {title}
-        </Text>
+        {typeof title === 'string' ? (
+          <Text size="xl" weight={700}>
+            {title}
+          </Text>
+        ) : (
+          title
+        )}
         <Group>{actions}</Group>
       </UiGroup>
       {children}

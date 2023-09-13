@@ -73,6 +73,16 @@ export class ApiCoreConfigService {
   get discordAdminIds() {
     return this.service.get<string[]>('discordAdminIds')
   }
+  get discordClientId() {
+    return this.service.get<string>('discordClientId') as string
+  }
+  get discordClientSecret() {
+    return this.service.get<string>('discordClientSecret') as string
+  }
+
+  get discordToken() {
+    return this.service.get<string>('discordToken') as string
+  }
 
   get environment() {
     return this.service.get('environment')

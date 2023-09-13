@@ -23,6 +23,12 @@ export type Scalars = {
   JSON: { input: any; output: any }
 }
 
+export type AdminCreateBotInput = {
+  clientId: Scalars['String']['input']
+  clientSecret: Scalars['String']['input']
+  token: Scalars['String']['input']
+}
+
 export type AdminCreateEmailInput = {
   email: Scalars['String']['input']
   ownerId: Scalars['String']['input']
@@ -37,6 +43,12 @@ export type AdminCreateIdentityInput = {
 export type AdminCreateUserInput = {
   password?: InputMaybe<Scalars['String']['input']>
   username: Scalars['String']['input']
+}
+
+export type AdminFindManyBotInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  page?: InputMaybe<Scalars['Int']['input']>
+  search?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AdminFindManyEmailInput = {
@@ -54,6 +66,10 @@ export type AdminFindManyUserInput = {
   role?: InputMaybe<UserRole>
   search?: InputMaybe<Scalars['String']['input']>
   status?: InputMaybe<UserStatus>
+}
+
+export type AdminUpdateBotInput = {
+  name?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AdminUpdateEmailInput = {
@@ -77,6 +93,43 @@ export type AppConfig = {
   authDiscordEnabled: Scalars['Boolean']['output']
   authPasswordEnabled: Scalars['Boolean']['output']
   authRegisterEnabled: Scalars['Boolean']['output']
+}
+
+export type Bot = {
+  __typename?: 'Bot'
+  application?: Maybe<Scalars['JSON']['output']>
+  avatarUrl?: Maybe<Scalars['String']['output']>
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  developersUrl: Scalars['String']['output']
+  id: Scalars['String']['output']
+  inviteUrl: Scalars['String']['output']
+  name: Scalars['String']['output']
+  redirectUrl: Scalars['String']['output']
+  redirectUrlSet?: Maybe<Scalars['Boolean']['output']>
+  started: Scalars['Boolean']['output']
+  status?: Maybe<BotStatus>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  verificationUrl: Scalars['String']['output']
+  verificationUrlSet?: Maybe<Scalars['Boolean']['output']>
+}
+
+export type BotPaging = {
+  __typename?: 'BotPaging'
+  data: Array<Bot>
+  meta: PagingMeta
+}
+
+export enum BotStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+}
+
+export type DiscordServer = {
+  __typename?: 'DiscordServer'
+  icon?: Maybe<Scalars['String']['output']>
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  permissions?: Maybe<Array<Scalars['String']['output']>>
 }
 
 export type Email = {
@@ -136,21 +189,31 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  adminCreateBot?: Maybe<Bot>
   adminCreateEmail?: Maybe<Email>
   adminCreateIdentity?: Maybe<Identity>
   adminCreateUser?: Maybe<User>
+  adminDeleteBot?: Maybe<Scalars['Boolean']['output']>
   adminDeleteEmail?: Maybe<Scalars['Boolean']['output']>
   adminDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   adminDeleteUser?: Maybe<Scalars['Boolean']['output']>
+  adminUpdateBot?: Maybe<Bot>
   adminUpdateEmail?: Maybe<Email>
   adminUpdateUser?: Maybe<User>
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
+  managerLeaveBotServer?: Maybe<Scalars['Boolean']['output']>
+  managerStartBot?: Maybe<Scalars['Boolean']['output']>
+  managerStopBot?: Maybe<Scalars['Boolean']['output']>
   register?: Maybe<User>
   userDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
   userLinkIdentity?: Maybe<Identity>
   userUpdateUser?: Maybe<User>
   userVerifyIdentityChallenge?: Maybe<IdentityChallenge>
+}
+
+export type MutationAdminCreateBotArgs = {
+  input: AdminCreateBotInput
 }
 
 export type MutationAdminCreateEmailArgs = {
@@ -165,6 +228,10 @@ export type MutationAdminCreateUserArgs = {
   input: AdminCreateUserInput
 }
 
+export type MutationAdminDeleteBotArgs = {
+  botId: Scalars['String']['input']
+}
+
 export type MutationAdminDeleteEmailArgs = {
   emailId: Scalars['String']['input']
 }
@@ -175,6 +242,11 @@ export type MutationAdminDeleteIdentityArgs = {
 
 export type MutationAdminDeleteUserArgs = {
   userId: Scalars['String']['input']
+}
+
+export type MutationAdminUpdateBotArgs = {
+  botId: Scalars['String']['input']
+  input: AdminUpdateBotInput
 }
 
 export type MutationAdminUpdateEmailArgs = {
@@ -189,6 +261,19 @@ export type MutationAdminUpdateUserArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput
+}
+
+export type MutationManagerLeaveBotServerArgs = {
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
+}
+
+export type MutationManagerStartBotArgs = {
+  botId: Scalars['String']['input']
+}
+
+export type MutationManagerStopBotArgs = {
+  botId: Scalars['String']['input']
 }
 
 export type MutationRegisterArgs = {
@@ -224,17 +309,25 @@ export type PagingMeta = {
 
 export type Query = {
   __typename?: 'Query'
+  adminFindManyBot?: Maybe<BotPaging>
   adminFindManyEmail?: Maybe<Array<Email>>
   adminFindManyIdentity?: Maybe<Array<Identity>>
   adminFindManyUser?: Maybe<UserPaging>
+  adminFindOneBot?: Maybe<Bot>
   adminFindOneUser?: Maybe<User>
   appConfig: AppConfig
+  managerGetBotServer?: Maybe<DiscordServer>
+  managerGetBotServers?: Maybe<Array<DiscordServer>>
   me?: Maybe<User>
   uptime: Scalars['Float']['output']
   userFindManyIdentity?: Maybe<Array<Identity>>
   userFindManyUser?: Maybe<UserPaging>
   userFindOneUser?: Maybe<User>
   userRequestIdentityChallenge?: Maybe<IdentityChallenge>
+}
+
+export type QueryAdminFindManyBotArgs = {
+  input: AdminFindManyBotInput
 }
 
 export type QueryAdminFindManyEmailArgs = {
@@ -249,8 +342,21 @@ export type QueryAdminFindManyUserArgs = {
   input: AdminFindManyUserInput
 }
 
+export type QueryAdminFindOneBotArgs = {
+  botId: Scalars['String']['input']
+}
+
 export type QueryAdminFindOneUserArgs = {
   userId: Scalars['String']['input']
+}
+
+export type QueryManagerGetBotServerArgs = {
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
+}
+
+export type QueryManagerGetBotServersArgs = {
+  botId: Scalars['String']['input']
 }
 
 export type QueryUserFindManyUserArgs = {
@@ -388,6 +494,197 @@ export type MeQuery = {
     status?: UserStatus | null
     updatedAt?: Date | null
     username?: string | null
+  } | null
+}
+
+export type BotDetailsFragment = {
+  __typename?: 'Bot'
+  avatarUrl?: string | null
+  createdAt?: Date | null
+  developersUrl: string
+  id: string
+  inviteUrl: string
+  name: string
+  redirectUrl: string
+  redirectUrlSet?: boolean | null
+  started: boolean
+  status?: BotStatus | null
+  updatedAt?: Date | null
+  verificationUrl: string
+  verificationUrlSet?: boolean | null
+}
+
+export type DiscordServerDetailsFragment = {
+  __typename?: 'DiscordServer'
+  id: string
+  name: string
+  icon?: string | null
+  permissions?: Array<string> | null
+}
+
+export type AdminFindManyBotQueryVariables = Exact<{
+  input: AdminFindManyBotInput
+}>
+
+export type AdminFindManyBotQuery = {
+  __typename?: 'Query'
+  paging?: {
+    __typename?: 'BotPaging'
+    data: Array<{
+      __typename?: 'Bot'
+      avatarUrl?: string | null
+      createdAt?: Date | null
+      developersUrl: string
+      id: string
+      inviteUrl: string
+      name: string
+      redirectUrl: string
+      redirectUrlSet?: boolean | null
+      started: boolean
+      status?: BotStatus | null
+      updatedAt?: Date | null
+      verificationUrl: string
+      verificationUrlSet?: boolean | null
+    }>
+    meta: {
+      __typename?: 'PagingMeta'
+      currentPage: number
+      isFirstPage: boolean
+      isLastPage: boolean
+      nextPage?: number | null
+      pageCount?: number | null
+      previousPage?: number | null
+      totalCount?: number | null
+    }
+  } | null
+}
+
+export type AdminFindOneBotQueryVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type AdminFindOneBotQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'Bot'
+    avatarUrl?: string | null
+    createdAt?: Date | null
+    developersUrl: string
+    id: string
+    inviteUrl: string
+    name: string
+    redirectUrl: string
+    redirectUrlSet?: boolean | null
+    started: boolean
+    status?: BotStatus | null
+    updatedAt?: Date | null
+    verificationUrl: string
+    verificationUrlSet?: boolean | null
+  } | null
+}
+
+export type AdminCreateBotMutationVariables = Exact<{
+  input: AdminCreateBotInput
+}>
+
+export type AdminCreateBotMutation = {
+  __typename?: 'Mutation'
+  created?: {
+    __typename?: 'Bot'
+    avatarUrl?: string | null
+    createdAt?: Date | null
+    developersUrl: string
+    id: string
+    inviteUrl: string
+    name: string
+    redirectUrl: string
+    redirectUrlSet?: boolean | null
+    started: boolean
+    status?: BotStatus | null
+    updatedAt?: Date | null
+    verificationUrl: string
+    verificationUrlSet?: boolean | null
+  } | null
+}
+
+export type AdminUpdateBotMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+  input: AdminUpdateBotInput
+}>
+
+export type AdminUpdateBotMutation = {
+  __typename?: 'Mutation'
+  updated?: {
+    __typename?: 'Bot'
+    avatarUrl?: string | null
+    createdAt?: Date | null
+    developersUrl: string
+    id: string
+    inviteUrl: string
+    name: string
+    redirectUrl: string
+    redirectUrlSet?: boolean | null
+    started: boolean
+    status?: BotStatus | null
+    updatedAt?: Date | null
+    verificationUrl: string
+    verificationUrlSet?: boolean | null
+  } | null
+}
+
+export type AdminDeleteBotMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type AdminDeleteBotMutation = { __typename?: 'Mutation'; deleted?: boolean | null }
+
+export type ManagerStartBotMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type ManagerStartBotMutation = { __typename?: 'Mutation'; started?: boolean | null }
+
+export type ManagerStopBotMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type ManagerStopBotMutation = { __typename?: 'Mutation'; stopped?: boolean | null }
+
+export type ManagerLeaveBotServerMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
+}>
+
+export type ManagerLeaveBotServerMutation = { __typename?: 'Mutation'; left?: boolean | null }
+
+export type ManagerGetBotServersQueryVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type ManagerGetBotServersQuery = {
+  __typename?: 'Query'
+  items?: Array<{
+    __typename?: 'DiscordServer'
+    id: string
+    name: string
+    icon?: string | null
+    permissions?: Array<string> | null
+  }> | null
+}
+
+export type ManagerGetBotServerQueryVariables = Exact<{
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
+}>
+
+export type ManagerGetBotServerQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'DiscordServer'
+    id: string
+    name: string
+    icon?: string | null
+    permissions?: Array<string> | null
   } | null
 }
 
@@ -871,6 +1168,31 @@ export type UserUpdateUserMutation = {
   } | null
 }
 
+export const BotDetailsFragmentDoc = gql`
+  fragment BotDetails on Bot {
+    avatarUrl
+    createdAt
+    developersUrl
+    id
+    inviteUrl
+    name
+    redirectUrl
+    redirectUrlSet
+    started
+    status
+    updatedAt
+    verificationUrl
+    verificationUrlSet
+  }
+`
+export const DiscordServerDetailsFragmentDoc = gql`
+  fragment DiscordServerDetails on DiscordServer {
+    id
+    name
+    icon
+    permissions
+  }
+`
 export const AppConfigDetailsFragmentDoc = gql`
   fragment AppConfigDetails on AppConfig {
     authDiscordEnabled
@@ -968,6 +1290,80 @@ export const MeDocument = gql`
     }
   }
   ${UserDetailsFragmentDoc}
+`
+export const AdminFindManyBotDocument = gql`
+  query adminFindManyBot($input: AdminFindManyBotInput!) {
+    paging: adminFindManyBot(input: $input) {
+      data {
+        ...BotDetails
+      }
+      meta {
+        ...PagingMetaDetails
+      }
+    }
+  }
+  ${BotDetailsFragmentDoc}
+  ${PagingMetaDetailsFragmentDoc}
+`
+export const AdminFindOneBotDocument = gql`
+  query adminFindOneBot($botId: String!) {
+    item: adminFindOneBot(botId: $botId) {
+      ...BotDetails
+    }
+  }
+  ${BotDetailsFragmentDoc}
+`
+export const AdminCreateBotDocument = gql`
+  mutation adminCreateBot($input: AdminCreateBotInput!) {
+    created: adminCreateBot(input: $input) {
+      ...BotDetails
+    }
+  }
+  ${BotDetailsFragmentDoc}
+`
+export const AdminUpdateBotDocument = gql`
+  mutation adminUpdateBot($botId: String!, $input: AdminUpdateBotInput!) {
+    updated: adminUpdateBot(botId: $botId, input: $input) {
+      ...BotDetails
+    }
+  }
+  ${BotDetailsFragmentDoc}
+`
+export const AdminDeleteBotDocument = gql`
+  mutation adminDeleteBot($botId: String!) {
+    deleted: adminDeleteBot(botId: $botId)
+  }
+`
+export const ManagerStartBotDocument = gql`
+  mutation managerStartBot($botId: String!) {
+    started: managerStartBot(botId: $botId)
+  }
+`
+export const ManagerStopBotDocument = gql`
+  mutation managerStopBot($botId: String!) {
+    stopped: managerStopBot(botId: $botId)
+  }
+`
+export const ManagerLeaveBotServerDocument = gql`
+  mutation managerLeaveBotServer($botId: String!, $serverId: String!) {
+    left: managerLeaveBotServer(botId: $botId, serverId: $serverId)
+  }
+`
+export const ManagerGetBotServersDocument = gql`
+  query managerGetBotServers($botId: String!) {
+    items: managerGetBotServers(botId: $botId) {
+      ...DiscordServerDetails
+    }
+  }
+  ${DiscordServerDetailsFragmentDoc}
+`
+export const ManagerGetBotServerDocument = gql`
+  query managerGetBotServer($botId: String!, $serverId: String!) {
+    item: managerGetBotServer(botId: $botId, serverId: $serverId) {
+      ...DiscordServerDetails
+    }
+  }
+  ${DiscordServerDetailsFragmentDoc}
 `
 export const UptimeDocument = gql`
   query uptime {
@@ -1162,6 +1558,16 @@ const LoginDocumentString = print(LoginDocument)
 const LogoutDocumentString = print(LogoutDocument)
 const RegisterDocumentString = print(RegisterDocument)
 const MeDocumentString = print(MeDocument)
+const AdminFindManyBotDocumentString = print(AdminFindManyBotDocument)
+const AdminFindOneBotDocumentString = print(AdminFindOneBotDocument)
+const AdminCreateBotDocumentString = print(AdminCreateBotDocument)
+const AdminUpdateBotDocumentString = print(AdminUpdateBotDocument)
+const AdminDeleteBotDocumentString = print(AdminDeleteBotDocument)
+const ManagerStartBotDocumentString = print(ManagerStartBotDocument)
+const ManagerStopBotDocumentString = print(ManagerStopBotDocument)
+const ManagerLeaveBotServerDocumentString = print(ManagerLeaveBotServerDocument)
+const ManagerGetBotServersDocumentString = print(ManagerGetBotServersDocument)
+const ManagerGetBotServerDocumentString = print(ManagerGetBotServerDocument)
 const UptimeDocumentString = print(UptimeDocument)
 const AppConfigDocumentString = print(AppConfigDocument)
 const AdminFindManyEmailDocumentString = print(AdminFindManyEmailDocument)
@@ -1236,6 +1642,146 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         (wrappedRequestHeaders) =>
           client.rawRequest<MeQuery>(MeDocumentString, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
         'me',
+        'query',
+      )
+    },
+    adminFindManyBot(
+      variables: AdminFindManyBotQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindManyBotQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindManyBotQuery>(AdminFindManyBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindManyBot',
+        'query',
+      )
+    },
+    adminFindOneBot(
+      variables: AdminFindOneBotQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindOneBotQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindOneBotQuery>(AdminFindOneBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindOneBot',
+        'query',
+      )
+    },
+    adminCreateBot(
+      variables: AdminCreateBotMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminCreateBotMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminCreateBotMutation>(AdminCreateBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminCreateBot',
+        'mutation',
+      )
+    },
+    adminUpdateBot(
+      variables: AdminUpdateBotMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminUpdateBotMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminUpdateBotMutation>(AdminUpdateBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminUpdateBot',
+        'mutation',
+      )
+    },
+    adminDeleteBot(
+      variables: AdminDeleteBotMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminDeleteBotMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminDeleteBotMutation>(AdminDeleteBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminDeleteBot',
+        'mutation',
+      )
+    },
+    managerStartBot(
+      variables: ManagerStartBotMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerStartBotMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerStartBotMutation>(ManagerStartBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerStartBot',
+        'mutation',
+      )
+    },
+    managerStopBot(
+      variables: ManagerStopBotMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerStopBotMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerStopBotMutation>(ManagerStopBotDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerStopBot',
+        'mutation',
+      )
+    },
+    managerLeaveBotServer(
+      variables: ManagerLeaveBotServerMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerLeaveBotServerMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerLeaveBotServerMutation>(ManagerLeaveBotServerDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerLeaveBotServer',
+        'mutation',
+      )
+    },
+    managerGetBotServers(
+      variables: ManagerGetBotServersQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerGetBotServersQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerGetBotServersQuery>(ManagerGetBotServersDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerGetBotServers',
+        'query',
+      )
+    },
+    managerGetBotServer(
+      variables: ManagerGetBotServerQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerGetBotServerQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerGetBotServerQuery>(ManagerGetBotServerDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerGetBotServer',
         'query',
       )
     },

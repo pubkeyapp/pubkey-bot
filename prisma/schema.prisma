@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Bot {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String    @unique
+  avatarUrl    String?
+  status       BotStatus @default(Active)
+  token        String /// @encrypted
+  clientId     String /// @encrypted
+  clientSecret String /// @encrypted
+}
+
 model Email {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -64,6 +76,11 @@ model User {
   username   String     @unique
   identities Identity[]
   emails     Email[]
+}
+
+enum BotStatus {
+  Active
+  Inactive
 }
 
 enum IdentityProvider {

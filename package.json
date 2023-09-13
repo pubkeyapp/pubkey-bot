@@ -21,7 +21,8 @@
     "prestart": "yarn prisma db push",
     "setup": "yarn nx generate setup",
     "start": "NODE_ENV=production node dist/apps/api/main.js",
-    "test:all": "nx run-many --target=test --all"
+    "test:all": "nx run-many --target=test --all",
+    "tunnel": "ngrok http --domain pubkey.ngrok.io 3000"
   },
   "private": true,
   "dependencies": {
@@ -61,12 +62,14 @@
     "bcrypt": "^5.1.1",
     "bs58": "^5.0.0",
     "cookie-parser": "^1.4.6",
+    "discord.js": "^14.13.0",
     "graphql": "^16.8.0",
     "graphql-scalars": "^1.22.2",
     "joi": "^17.10.1",
     "linkify-react": "^4.1.1",
     "linkifyjs": "^4.1.1",
     "mantine-datatable": "^2.9.13",
+    "oceanic.js": "^1.8.0",
     "passport": "^0.6.0",
     "passport-discord": "^0.1.4",
     "passport-jwt": "^4.0.1",

@@ -1,0 +1,16 @@
+{
+  "name": "web-bot-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/bot/feature/src",
+  "projectType": "library",
+  "tags": ["app:web", "type:feature"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/web/bot/feature/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

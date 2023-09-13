@@ -6,6 +6,7 @@ import { ApiIdentityFeatureModule } from '@pubkey-bot/api/identity/feature'
 import { ApiUserFeatureModule } from '@pubkey-bot/api/user/feature'
 import { ApiCoreController } from './api-core.controller'
 import { ApiCoreResolver } from './api-core.resolver'
+import { ApiBotFeatureModule } from '@pubkey-bot/api/bot/feature'
 
 const imports = [
   ApiAuthFeatureModule,
@@ -13,6 +14,7 @@ const imports = [
   ApiEmailFeatureModule,
   ApiIdentityFeatureModule,
   ApiUserFeatureModule,
+  ApiBotFeatureModule,
 ]
 
 @Module({

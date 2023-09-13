@@ -1,0 +1,79 @@
+fragment BotDetails on Bot {
+  avatarUrl
+  createdAt
+  developersUrl
+  id
+  inviteUrl
+  name
+  redirectUrl
+  redirectUrlSet
+  started
+  status
+  updatedAt
+  verificationUrl
+  verificationUrlSet
+}
+
+fragment DiscordServerDetails on DiscordServer {
+  id
+  name
+  icon
+  permissions
+}
+
+query adminFindManyBot($input: AdminFindManyBotInput!) {
+  paging: adminFindManyBot(input: $input) {
+    data {
+      ...BotDetails
+    }
+    meta {
+      ...PagingMetaDetails
+    }
+  }
+}
+
+query adminFindOneBot($botId: String!) {
+  item: adminFindOneBot(botId: $botId) {
+    ...BotDetails
+  }
+}
+
+mutation adminCreateBot($input: AdminCreateBotInput!) {
+  created: adminCreateBot(input: $input) {
+    ...BotDetails
+  }
+}
+
+mutation adminUpdateBot($botId: String!, $input: AdminUpdateBotInput!) {
+  updated: adminUpdateBot(botId: $botId, input: $input) {
+    ...BotDetails
+  }
+}
+
+mutation adminDeleteBot($botId: String!) {
+  deleted: adminDeleteBot(botId: $botId)
+}
+
+mutation managerStartBot($botId: String!) {
+  started: managerStartBot(botId: $botId)
+}
+
+mutation managerStopBot($botId: String!) {
+  stopped: managerStopBot(botId: $botId)
+}
+
+mutation managerLeaveBotServer($botId: String!, $serverId: String!) {
+  left: managerLeaveBotServer(botId: $botId, serverId: $serverId)
+}
+
+query managerGetBotServers($botId: String!) {
+  items: managerGetBotServers(botId: $botId) {
+    ...DiscordServerDetails
+  }
+}
+
+query managerGetBotServer($botId: String!, $serverId: String!) {
+  item: managerGetBotServer(botId: $botId, serverId: $serverId) {
+    ...DiscordServerDetails
+  }
+}

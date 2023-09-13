@@ -15,6 +15,7 @@ export const validationSchema = Joi.object({
   DISCORD_ADMIN_IDS: Joi.string(),
   DISCORD_CLIENT_ID: Joi.string().required(),
   DISCORD_CLIENT_SECRET: Joi.string().required(),
+  DISCORD_TOKEN: Joi.string().required(),
   GRAPHQL_PLAYGROUND: Joi.boolean().default(false),
   JWT_SECRET: Joi.string().required(),
   HOST: Joi.string().default('0.0.0.0'),

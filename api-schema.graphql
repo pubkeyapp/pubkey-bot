@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AdminCreateBotInput {
+  clientId: String!
+  clientSecret: String!
+  token: String!
+}
+
 input AdminCreateEmailInput {
   email: String!
   ownerId: String!
@@ -16,6 +22,12 @@ input AdminCreateIdentityInput {
 input AdminCreateUserInput {
   password: String
   username: String!
+}
+
+input AdminFindManyBotInput {
+  limit: Int = 10
+  page: Int = 1
+  search: String
 }
 
 input AdminFindManyEmailInput {
@@ -33,6 +45,10 @@ input AdminFindManyUserInput {
   role: UserRole
   search: String
   status: UserStatus
+}
+
+input AdminUpdateBotInput {
+  name: String
 }
 
 input AdminUpdateEmailInput {
@@ -57,10 +73,44 @@ type AppConfig {
   authRegisterEnabled: Boolean!
 }
 
+type Bot {
+  application: JSON
+  avatarUrl: String
+  createdAt: DateTime
+  developersUrl: String!
+  id: String!
+  inviteUrl: String!
+  name: String!
+  redirectUrl: String!
+  redirectUrlSet: Boolean
+  started: Boolean!
+  status: BotStatus
+  updatedAt: DateTime
+  verificationUrl: String!
+  verificationUrlSet: Boolean
+}
+
+type BotPaging {
+  data: [Bot!]!
+  meta: PagingMeta!
+}
+
+enum BotStatus {
+  Active
+  Inactive
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type DiscordServer {
+  icon: String
+  id: String!
+  name: String!
+  permissions: [String!]
+}
 
 type Email {
   createdAt: DateTime!
@@ -120,16 +170,22 @@ input LoginInput {
 }
 
 type Mutation {
+  adminCreateBot(input: AdminCreateBotInput!): Bot
   adminCreateEmail(input: AdminCreateEmailInput!): Email
   adminCreateIdentity(input: AdminCreateIdentityInput!): Identity
   adminCreateUser(input: AdminCreateUserInput!): User
+  adminDeleteBot(botId: String!): Boolean
   adminDeleteEmail(emailId: String!): Boolean
   adminDeleteIdentity(identityId: String!): Boolean
   adminDeleteUser(userId: String!): Boolean
+  adminUpdateBot(botId: String!, input: AdminUpdateBotInput!): Bot
   adminUpdateEmail(emailId: String!, input: AdminUpdateEmailInput!): Email
   adminUpdateUser(input: AdminUpdateUserInput!, userId: String!): User
   login(input: LoginInput!): User
   logout: Boolean
+  managerLeaveBotServer(botId: String!, serverId: String!): Boolean
+  managerStartBot(botId: String!): Boolean
+  managerStopBot(botId: String!): Boolean
   register(input: RegisterInput!): User
   userDeleteIdentity(identityId: String!): Boolean
   userLinkIdentity(input: LinkIdentityInput!): Identity
@@ -148,11 +204,15 @@ type PagingMeta {
 }
 
 type Query {
+  adminFindManyBot(input: AdminFindManyBotInput!): BotPaging
   adminFindManyEmail(input: AdminFindManyEmailInput!): [Email!]
   adminFindManyIdentity(input: AdminFindManyIdentityInput!): [Identity!]
   adminFindManyUser(input: AdminFindManyUserInput!): UserPaging
+  adminFindOneBot(botId: String!): Bot
   adminFindOneUser(userId: String!): User
   appConfig: AppConfig!
+  managerGetBotServer(botId: String!, serverId: String!): DiscordServer
+  managerGetBotServers(botId: String!): [DiscordServer!]
   me: User
   uptime: Float!
   userFindManyIdentity: [Identity!]

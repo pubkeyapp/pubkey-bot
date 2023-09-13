@@ -1,13 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { IdentityProvider, Prisma, User, UserRole, UserStatus } from '@prisma/client'
-import {
-  ApiCoreService,
-  AppContext,
-  hashPassword,
-  slugifyId,
-  validatePassword,
-} from '@pubkey-bot/api/core/data-access'
+import { ApiCoreService, AppContext, hashPassword, slugifyId, validatePassword } from '@pubkey-bot/api/core/data-access'
 import { Request } from 'express'
 import { LoginInput } from './dto/login.input'
 import { RegisterInput } from './dto/register.input'
@@ -86,6 +80,7 @@ export class ApiAuthService {
         status: UserStatus.Active,
         avatarUrl: (identity.profile as { avatarUrl?: string })?.avatarUrl,
         role: admin ? UserRole.Admin : UserRole.User,
+        developer: admin,
         identities: {
           create: {
             ...identity,

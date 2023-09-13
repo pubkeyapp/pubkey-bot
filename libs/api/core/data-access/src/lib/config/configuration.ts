@@ -33,6 +33,7 @@ export interface ApiCoreConfig {
   discordAdminIds: string[]
   discordClientId: string
   discordClientSecret: string
+  discordToken: string
   host: string
   port: number
   webUrl: string
@@ -54,6 +55,7 @@ export function configuration(): ApiCoreConfig {
     discordAdminIds: getFromEnvironment('DISCORD_ADMIN_IDS'),
     discordClientId: process.env['DISCORD_CLIENT_ID'] as string,
     discordClientSecret: process.env['DISCORD_CLIENT_SECRET'] as string,
+    discordToken: process.env['DISCORD_TOKEN'] as string,
     host: process.env['HOST'] as string,
     port: parseInt(process.env['PORT'] as string, 10) || 3000,
     webUrl: WEB_URL,
