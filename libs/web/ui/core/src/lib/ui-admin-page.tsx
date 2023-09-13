@@ -1,4 +1,4 @@
-import { Box, Group, Title } from '@mantine/core'
+import { Box, Flex, Group, Title } from '@mantine/core'
 import { ReactNode } from 'react'
 import { UiContainer } from './ui-container'
 import { UiGroup } from './ui-group'
@@ -16,9 +16,9 @@ export function UiAdminPage({
   title?: ReactNode
 }) {
   return (
-    <UiContainer>
-      <UiStack>
-        <Box>
+    <UiContainer size="xl" h="100%">
+      <Flex direction="column" justify="space-between" h="100%">
+        <Box mb="lg">
           <UiGroup>
             <Group>
               {leftAction ? leftAction : null}
@@ -27,10 +27,10 @@ export function UiAdminPage({
             {rightAction ? <Group>{rightAction}</Group> : null}
           </UiGroup>
         </Box>
-        <UiStack my="xs" spacing="xl">
+        <UiStack my="xs" spacing="xl" sx={{ flexGrow: 1 }}>
           {children}
         </UiStack>
-      </UiStack>
+      </Flex>
     </UiContainer>
   )
 }

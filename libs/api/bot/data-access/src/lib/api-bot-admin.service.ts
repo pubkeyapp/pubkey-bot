@@ -49,7 +49,9 @@ export class ApiBotAdminService {
     if (!bot) {
       throw new Error('Bot not found')
     }
-    const instance = this.manager.getBotInstance(botId)
+    const instance = this.manager.getBotInstance(botId, {
+      throwIfNotStarted: false,
+    })
     if (!instance) {
       return bot
     }

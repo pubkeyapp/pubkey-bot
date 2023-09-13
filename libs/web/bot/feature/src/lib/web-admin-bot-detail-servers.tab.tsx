@@ -5,13 +5,13 @@ import { WebAdminUiBotServers } from './web-admin-ui-bot-servers'
 export function WebAdminBotDetailServersTab({ botId }: { botId: string }) {
   const { bot } = useAdminFindOneBot({ botId })
 
-  return bot?.started ? (
-    bot ? (
+  return bot ? (
+    bot?.started ? (
       <WebAdminUiBotServers bot={bot} />
     ) : (
-      <UiAlert message="Bot not found." />
+      <UiAlert message="Bot not started." />
     )
   ) : (
-    <UiAlert message="Bot not started." />
+    <UiAlert message="Bot not found." />
   )
 }

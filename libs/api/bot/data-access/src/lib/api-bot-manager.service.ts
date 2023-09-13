@@ -39,7 +39,7 @@ export class ApiBotManagerService implements OnModuleInit {
 
   async getBotServers(botId: string): Promise<DiscordServer[]> {
     const instance = this.getBotInstance(botId)
-    const servers = await instance.client?.guilds.fetch()
+    const servers = await instance?.client?.guilds.fetch()
 
     if (!servers) {
       return []
@@ -55,7 +55,7 @@ export class ApiBotManagerService implements OnModuleInit {
 
   async getBotServer(botId: string, serverId: string): Promise<DiscordServer> {
     const instance = this.getBotInstance(botId)
-    const server = await instance.client?.guilds.fetch({ guild: serverId })
+    const server = await instance?.client?.guilds.fetch({ guild: serverId })
 
     if (!server) {
       throw new Error(`Server ${serverId} not found`)
@@ -80,14 +80,14 @@ export class ApiBotManagerService implements OnModuleInit {
   }
   async leaveBotServer(botId: string, serverId: string) {
     const instance = this.getBotInstance(botId)
-    const server = await instance.client?.guilds.fetch({ guild: serverId })
+    const server = await instance?.client?.guilds.fetch({ guild: serverId })
 
     if (!server) {
       throw new Error(`Server ${serverId} not found`)
     }
 
     const result = await server.leave()
-    this.logger.verbose(`Bot ${instance.client?.user?.username} left server ${result.name}`)
+    this.logger.verbose(`Bot ${instance?.client?.user?.username} left server ${result.name}`)
     return true
   }
 
@@ -129,9 +129,9 @@ export class ApiBotManagerService implements OnModuleInit {
     return `${this.core.config.apiUrl}/bot/${botId}/verification`
   }
 
-  getBotInstance(botId: string) {
+  getBotInstance(botId: string, { throwIfNotStarted = true } = {}) {
     const instance = this.bots.get(botId)
-    if (!instance) {
+    if (!instance && throwIfNotStarted) {
       throw new Error(`Bot ${botId} not started`)
     }
     return instance

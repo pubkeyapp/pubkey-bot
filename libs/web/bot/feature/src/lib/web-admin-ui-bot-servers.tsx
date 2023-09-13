@@ -1,8 +1,8 @@
-import { Avatar, Grid, NavLink } from '@mantine/core'
+import { Anchor, Avatar, Grid, NavLink, ScrollArea, Text } from '@mantine/core'
 import { Bot, DiscordServer } from '@pubkey-bot/sdk'
 import { useManagerGetBotServers } from '@pubkey-bot/web/bot/data-access'
-import { UiAlert, UiLoader } from '@pubkey-bot/web/ui/core'
-import { IconChevronRight } from '@tabler/icons-react'
+import { UiAlert, UiEmpty, UiLoader } from '@pubkey-bot/web/ui/core'
+import { IconChevronRight, IconServer } from '@tabler/icons-react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 
 import { WebAdminUiBotServer } from './web-admin-ui-bot-server'
@@ -18,10 +18,23 @@ export function WebAdminUiBotServers({ bot }: { bot: Bot }) {
   }
   const items: DiscordServer[] = query.data?.items ?? []
 
+  if (!items.length) {
+    return (
+      <UiEmpty icon={IconServer} title="No servers found.">
+        <Text size="sm" color="dimmed">
+          <Anchor href={bot.inviteUrl} target="_blank">
+            Invite the bot
+          </Anchor>{' '}
+          to a server to get started.
+        </Text>
+      </UiEmpty>
+    )
+  }
+
   return (
-    <div>
-      <Grid>
-        <Grid.Col span={3}>
+    <Grid h="100%">
+      <Grid.Col span={3} h="100%" sx={{ overflow: 'auto' }}>
+        <ScrollArea h="100%">
           {items?.map((item) => (
             <NavLink
               component={Link}
@@ -34,14 +47,14 @@ export function WebAdminUiBotServers({ bot }: { bot: Bot }) {
               variant="filled"
             />
           ))}
-        </Grid.Col>
-        <Grid.Col span={9}>
-          <Routes>
-            <Route index element={<UiAlert message={`Select a server`} />} />
-            <Route path=":serverId" element={<WebAdminUiBotServer botId={bot.id} />} />
-          </Routes>
-        </Grid.Col>
-      </Grid>
-    </div>
+        </ScrollArea>
+      </Grid.Col>
+      <Grid.Col span={9}>
+        <Routes>
+          <Route index element={<UiAlert message={`Select a server`} />} />
+          <Route path=":serverId" element={<WebAdminUiBotServer botId={bot.id} />} />
+        </Routes>
+      </Grid.Col>
+    </Grid>
   )
 }

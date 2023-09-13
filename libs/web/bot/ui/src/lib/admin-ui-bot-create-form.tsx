@@ -15,9 +15,8 @@ export function AdminUiCreateBotForm({ children, submit }: AdminUiCreateBotFormP
   }
 
   const fields: UiFormField<AdminCreateBotInput>[] = [
-    //
-    formFieldText('clientId', { label: 'Token', required: true }),
-    formFieldText('clientSecret', { label: 'Token', required: true }),
+    formFieldText('clientId', { label: 'Client ID', required: true }),
+    formFieldText('clientSecret', { label: 'Client Secret', required: true }),
     formFieldText('token', { label: 'Token', required: true }),
   ]
   return (
