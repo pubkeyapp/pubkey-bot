@@ -1,0 +1,41 @@
+fragment CollectionDetails on Collection {
+  createdAt
+  id
+  name
+  account
+  network
+  updatedAt
+}
+
+query adminFindManyCollection($input: AdminFindManyCollectionInput!) {
+  paging: adminFindManyCollection(input: $input) {
+    data {
+      ...CollectionDetails
+    }
+    meta {
+      ...PagingMetaDetails
+    }
+  }
+}
+
+query adminFindOneCollection($collectionId: String!) {
+  item: adminFindOneCollection(collectionId: $collectionId) {
+    ...CollectionDetails
+  }
+}
+
+mutation adminCreateCollection($input: AdminCreateCollectionInput!) {
+  created: adminCreateCollection(input: $input) {
+    ...CollectionDetails
+  }
+}
+
+mutation adminUpdateCollection($collectionId: String!, $input: AdminUpdateCollectionInput!) {
+  updated: adminUpdateCollection(collectionId: $collectionId, input: $input) {
+    ...CollectionDetails
+  }
+}
+
+mutation adminDeleteCollection($collectionId: String!) {
+  deleted: adminDeleteCollection(collectionId: $collectionId)
+}

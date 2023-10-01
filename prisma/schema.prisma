@@ -19,6 +19,23 @@ model Bot {
   clientSecret String /// @encrypted
 }
 
+model Collection {
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+  account     String
+  name        String?
+  imageUrl    String?
+  metadataUrl String?
+  description String?
+  symbol      String?
+  vaultId     String?
+  Network     Network?    @relation(fields: [network], references: [type])
+  network     NetworkType
+
+  @@unique([account, network])
+}
+
 model Email {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -63,6 +80,17 @@ model IdentityChallenge {
   providerId String
 }
 
+model Network {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now()) @updatedAt
+  type      NetworkType @unique
+  name      String      @unique
+  endpoint  String
+
+  collections Collection[]
+}
+
 model User {
   id         String     @id @default(cuid())
   createdAt  DateTime   @default(now())
@@ -86,6 +114,11 @@ enum BotStatus {
 enum IdentityProvider {
   Discord
   Solana
+}
+
+enum NetworkType {
+  SolanaDevnet
+  SolanaMainnet
 }
 
 enum UserRole {

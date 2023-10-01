@@ -1,5 +1,19 @@
 import { faker } from '@faker-js/faker'
-import { IdentityProvider, Prisma, UserRole, UserStatus } from '@prisma/client'
+import { IdentityProvider, NetworkType, Prisma, UserRole, UserStatus } from '@prisma/client'
+export const provisionNetworks: Prisma.NetworkCreateInput[] = [
+  {
+    id: 'solana-devnet',
+    name: 'Solana Devnet',
+    type: NetworkType.SolanaDevnet,
+    endpoint: `https://solana-devnet.pubkey.network`,
+  },
+  {
+    id: 'solana-mainnet',
+    name: 'Solana Mainnet',
+    type: NetworkType.SolanaMainnet,
+    endpoint: `https://solana-mainnet.pubkey.network`,
+  },
+]
 
 export const provisionUsers: Prisma.UserCreateInput[] = [
   {

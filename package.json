@@ -65,6 +65,7 @@
     "discord.js": "^14.13.0",
     "graphql": "^16.8.0",
     "graphql-scalars": "^1.22.2",
+    "helius-sdk": "^1.0.14",
     "joi": "^17.10.1",
     "linkify-react": "^4.1.1",
     "linkifyjs": "^4.1.1",

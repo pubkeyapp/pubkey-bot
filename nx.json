@@ -30,5 +30,8 @@
         "unitTestRunner": "none"
       }
     }
+  },
+  "workspaceLayout": {
+    "projectNameAndRootFormat": "as-provided"
   }
 }

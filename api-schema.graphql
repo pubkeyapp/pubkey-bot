@@ -8,6 +8,12 @@ input AdminCreateBotInput {
   token: String!
 }
 
+input AdminCreateCollectionInput {
+  account: String!
+  name: String!
+  network: NetworkType!
+}
+
 input AdminCreateEmailInput {
   email: String!
   ownerId: String!
@@ -19,12 +25,24 @@ input AdminCreateIdentityInput {
   providerId: String!
 }
 
+input AdminCreateNetworkInput {
+  endpoint: String!
+  name: String!
+  type: NetworkType!
+}
+
 input AdminCreateUserInput {
   password: String
   username: String!
 }
 
 input AdminFindManyBotInput {
+  limit: Int = 10
+  page: Int = 1
+  search: String
+}
+
+input AdminFindManyCollectionInput {
   limit: Int = 10
   page: Int = 1
   search: String
@@ -39,6 +57,12 @@ input AdminFindManyIdentityInput {
   provider: IdentityProvider
 }
 
+input AdminFindManyNetworkInput {
+  limit: Int = 10
+  page: Int = 1
+  search: String
+}
+
 input AdminFindManyUserInput {
   limit: Int = 10
   page: Int = 1
@@ -51,11 +75,19 @@ input AdminUpdateBotInput {
   name: String
 }
 
+input AdminUpdateCollectionInput {
+  name: String
+}
+
 input AdminUpdateEmailInput {
   default: Boolean
   email: String
   private: Boolean
   verified: Boolean
+}
+
+input AdminUpdateNetworkInput {
+  name: String
 }
 
 input AdminUpdateUserInput {
@@ -98,6 +130,20 @@ type BotPaging {
 enum BotStatus {
   Active
   Inactive
+}
+
+type Collection {
+  account: String!
+  createdAt: DateTime
+  id: String!
+  name: String
+  network: NetworkType!
+  updatedAt: DateTime
+}
+
+type CollectionPaging {
+  data: [Collection!]!
+  meta: PagingMeta!
 }
 
 """
@@ -171,15 +217,21 @@ input LoginInput {
 
 type Mutation {
   adminCreateBot(input: AdminCreateBotInput!): Bot
+  adminCreateCollection(input: AdminCreateCollectionInput!): Collection
   adminCreateEmail(input: AdminCreateEmailInput!): Email
   adminCreateIdentity(input: AdminCreateIdentityInput!): Identity
+  adminCreateNetwork(input: AdminCreateNetworkInput!): Network
   adminCreateUser(input: AdminCreateUserInput!): User
   adminDeleteBot(botId: String!): Boolean
+  adminDeleteCollection(collectionId: String!): Boolean
   adminDeleteEmail(emailId: String!): Boolean
   adminDeleteIdentity(identityId: String!): Boolean
+  adminDeleteNetwork(networkId: String!): Boolean
   adminDeleteUser(userId: String!): Boolean
   adminUpdateBot(botId: String!, input: AdminUpdateBotInput!): Bot
+  adminUpdateCollection(collectionId: String!, input: AdminUpdateCollectionInput!): Collection
   adminUpdateEmail(emailId: String!, input: AdminUpdateEmailInput!): Email
+  adminUpdateNetwork(input: AdminUpdateNetworkInput!, networkId: String!): Network
   adminUpdateUser(input: AdminUpdateUserInput!, userId: String!): User
   login(input: LoginInput!): User
   logout: Boolean
@@ -191,6 +243,25 @@ type Mutation {
   userLinkIdentity(input: LinkIdentityInput!): Identity
   userUpdateUser(input: UserUpdateUserInput!): User
   userVerifyIdentityChallenge(input: VerifyIdentityChallengeInput!): IdentityChallenge
+}
+
+type Network {
+  createdAt: DateTime
+  endpoint: String!
+  id: String!
+  name: String!
+  type: NetworkType!
+  updatedAt: DateTime
+}
+
+type NetworkPaging {
+  data: [Network!]!
+  meta: PagingMeta!
+}
+
+enum NetworkType {
+  SolanaDevnet
+  SolanaMainnet
 }
 
 type PagingMeta {
@@ -205,10 +276,14 @@ type PagingMeta {
 
 type Query {
   adminFindManyBot(input: AdminFindManyBotInput!): BotPaging
+  adminFindManyCollection(input: AdminFindManyCollectionInput!): CollectionPaging
   adminFindManyEmail(input: AdminFindManyEmailInput!): [Email!]
   adminFindManyIdentity(input: AdminFindManyIdentityInput!): [Identity!]
+  adminFindManyNetwork(input: AdminFindManyNetworkInput!): NetworkPaging
   adminFindManyUser(input: AdminFindManyUserInput!): UserPaging
   adminFindOneBot(botId: String!): Bot
+  adminFindOneCollection(collectionId: String!): Collection
+  adminFindOneNetwork(networkId: String!): Network
   adminFindOneUser(userId: String!): User
   appConfig: AppConfig!
   managerGetBotServer(botId: String!, serverId: String!): DiscordServer

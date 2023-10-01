@@ -6235,6 +6235,15 @@ axios@^1.0.0:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
+axios@^1.2.3:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.5.1.tgz#11fbaa11fc35f431193a9564109c88c1f27b585f"
+  integrity sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 axios@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.5.0.tgz#f02e4af823e2e46a9768cfc74691fdd0517ea267"
@@ -9552,6 +9561,13 @@ header-case@^2.0.4:
   dependencies:
     capital-case "^1.0.4"
     tslib "^2.0.3"
+
+helius-sdk@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/helius-sdk/-/helius-sdk-1.0.14.tgz#a0f3b161c00bb165a920ae9466fa4ca8d1fa077c"
+  integrity sha512-83+jgLDU2zvHDM/NwaIIQl5w17E3x97tKJc28adcd4G9NuPqZQvS1CuLmmFX94OGmOzaMsCI20eIlYiMc7C2TQ==
+  dependencies:
+    axios "^1.2.3"
 
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"

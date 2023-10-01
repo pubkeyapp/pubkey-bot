@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 import { Prisma, UserStatus } from '@prisma/client'
-import { fakeUsers, provisionUsers } from './api-core-provision-data'
+import { fakeUsers, provisionNetworks, provisionUsers } from './api-core-provision-data'
 import { hashPassword } from './helpers/hash-validate-password'
 import { ApiCoreService } from './api-core.service'
 import { slugifyId } from './helpers/slugify-id'
@@ -31,7 +31,25 @@ export class ApiCoreProvisionService implements OnModuleInit {
   }
 
   private async provisionDatabase() {
+    await this.provisionNetworks()
     await this.provisionUsers()
+  }
+
+  private async provisionNetworks() {
+    await Promise.all(provisionNetworks.map((network) => this.provisionNetwork(network)))
+  }
+
+  private async provisionNetwork(input: Prisma.NetworkCreateInput) {
+    const existing = await this.core.data.network.count({ where: { type: input.type } })
+    if (existing < 1) {
+      this.logger.verbose(`Creating network (${input.type}) name = ${input.name}, endpoint = ${input.endpoint}`)
+      await this.core.data.network.create({
+        data: { ...input },
+      })
+      this.logger.verbose(`Provisioned (${input.type}) name = ${input.name}, endpoint = ${input.endpoint}`)
+      return
+    }
+    this.logger.verbose(`Found network (${input.type}) name = ${input.name}, endpoint = ${input.endpoint}`)
   }
 
   private async provisionUsers() {

@@ -29,6 +29,12 @@ export type AdminCreateBotInput = {
   token: Scalars['String']['input']
 }
 
+export type AdminCreateCollectionInput = {
+  account: Scalars['String']['input']
+  name: Scalars['String']['input']
+  network: NetworkType
+}
+
 export type AdminCreateEmailInput = {
   email: Scalars['String']['input']
   ownerId: Scalars['String']['input']
@@ -40,12 +46,24 @@ export type AdminCreateIdentityInput = {
   providerId: Scalars['String']['input']
 }
 
+export type AdminCreateNetworkInput = {
+  endpoint: Scalars['String']['input']
+  name: Scalars['String']['input']
+  type: NetworkType
+}
+
 export type AdminCreateUserInput = {
   password?: InputMaybe<Scalars['String']['input']>
   username: Scalars['String']['input']
 }
 
 export type AdminFindManyBotInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  page?: InputMaybe<Scalars['Int']['input']>
+  search?: InputMaybe<Scalars['String']['input']>
+}
+
+export type AdminFindManyCollectionInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   page?: InputMaybe<Scalars['Int']['input']>
   search?: InputMaybe<Scalars['String']['input']>
@@ -60,6 +78,12 @@ export type AdminFindManyIdentityInput = {
   provider?: InputMaybe<IdentityProvider>
 }
 
+export type AdminFindManyNetworkInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  page?: InputMaybe<Scalars['Int']['input']>
+  search?: InputMaybe<Scalars['String']['input']>
+}
+
 export type AdminFindManyUserInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   page?: InputMaybe<Scalars['Int']['input']>
@@ -72,11 +96,19 @@ export type AdminUpdateBotInput = {
   name?: InputMaybe<Scalars['String']['input']>
 }
 
+export type AdminUpdateCollectionInput = {
+  name?: InputMaybe<Scalars['String']['input']>
+}
+
 export type AdminUpdateEmailInput = {
   default?: InputMaybe<Scalars['Boolean']['input']>
   email?: InputMaybe<Scalars['String']['input']>
   private?: InputMaybe<Scalars['Boolean']['input']>
   verified?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+export type AdminUpdateNetworkInput = {
+  name?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AdminUpdateUserInput = {
@@ -122,6 +154,22 @@ export type BotPaging = {
 export enum BotStatus {
   Active = 'Active',
   Inactive = 'Inactive',
+}
+
+export type Collection = {
+  __typename?: 'Collection'
+  account: Scalars['String']['output']
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  id: Scalars['String']['output']
+  name?: Maybe<Scalars['String']['output']>
+  network: NetworkType
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+}
+
+export type CollectionPaging = {
+  __typename?: 'CollectionPaging'
+  data: Array<Collection>
+  meta: PagingMeta
 }
 
 export type DiscordServer = {
@@ -190,15 +238,21 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation'
   adminCreateBot?: Maybe<Bot>
+  adminCreateCollection?: Maybe<Collection>
   adminCreateEmail?: Maybe<Email>
   adminCreateIdentity?: Maybe<Identity>
+  adminCreateNetwork?: Maybe<Network>
   adminCreateUser?: Maybe<User>
   adminDeleteBot?: Maybe<Scalars['Boolean']['output']>
+  adminDeleteCollection?: Maybe<Scalars['Boolean']['output']>
   adminDeleteEmail?: Maybe<Scalars['Boolean']['output']>
   adminDeleteIdentity?: Maybe<Scalars['Boolean']['output']>
+  adminDeleteNetwork?: Maybe<Scalars['Boolean']['output']>
   adminDeleteUser?: Maybe<Scalars['Boolean']['output']>
   adminUpdateBot?: Maybe<Bot>
+  adminUpdateCollection?: Maybe<Collection>
   adminUpdateEmail?: Maybe<Email>
+  adminUpdateNetwork?: Maybe<Network>
   adminUpdateUser?: Maybe<User>
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
@@ -216,12 +270,20 @@ export type MutationAdminCreateBotArgs = {
   input: AdminCreateBotInput
 }
 
+export type MutationAdminCreateCollectionArgs = {
+  input: AdminCreateCollectionInput
+}
+
 export type MutationAdminCreateEmailArgs = {
   input: AdminCreateEmailInput
 }
 
 export type MutationAdminCreateIdentityArgs = {
   input: AdminCreateIdentityInput
+}
+
+export type MutationAdminCreateNetworkArgs = {
+  input: AdminCreateNetworkInput
 }
 
 export type MutationAdminCreateUserArgs = {
@@ -232,12 +294,20 @@ export type MutationAdminDeleteBotArgs = {
   botId: Scalars['String']['input']
 }
 
+export type MutationAdminDeleteCollectionArgs = {
+  collectionId: Scalars['String']['input']
+}
+
 export type MutationAdminDeleteEmailArgs = {
   emailId: Scalars['String']['input']
 }
 
 export type MutationAdminDeleteIdentityArgs = {
   identityId: Scalars['String']['input']
+}
+
+export type MutationAdminDeleteNetworkArgs = {
+  networkId: Scalars['String']['input']
 }
 
 export type MutationAdminDeleteUserArgs = {
@@ -249,9 +319,19 @@ export type MutationAdminUpdateBotArgs = {
   input: AdminUpdateBotInput
 }
 
+export type MutationAdminUpdateCollectionArgs = {
+  collectionId: Scalars['String']['input']
+  input: AdminUpdateCollectionInput
+}
+
 export type MutationAdminUpdateEmailArgs = {
   emailId: Scalars['String']['input']
   input: AdminUpdateEmailInput
+}
+
+export type MutationAdminUpdateNetworkArgs = {
+  input: AdminUpdateNetworkInput
+  networkId: Scalars['String']['input']
 }
 
 export type MutationAdminUpdateUserArgs = {
@@ -296,6 +376,27 @@ export type MutationUserVerifyIdentityChallengeArgs = {
   input: VerifyIdentityChallengeInput
 }
 
+export type Network = {
+  __typename?: 'Network'
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  endpoint: Scalars['String']['output']
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  type: NetworkType
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+}
+
+export type NetworkPaging = {
+  __typename?: 'NetworkPaging'
+  data: Array<Network>
+  meta: PagingMeta
+}
+
+export enum NetworkType {
+  SolanaDevnet = 'SolanaDevnet',
+  SolanaMainnet = 'SolanaMainnet',
+}
+
 export type PagingMeta = {
   __typename?: 'PagingMeta'
   currentPage: Scalars['Int']['output']
@@ -310,10 +411,14 @@ export type PagingMeta = {
 export type Query = {
   __typename?: 'Query'
   adminFindManyBot?: Maybe<BotPaging>
+  adminFindManyCollection?: Maybe<CollectionPaging>
   adminFindManyEmail?: Maybe<Array<Email>>
   adminFindManyIdentity?: Maybe<Array<Identity>>
+  adminFindManyNetwork?: Maybe<NetworkPaging>
   adminFindManyUser?: Maybe<UserPaging>
   adminFindOneBot?: Maybe<Bot>
+  adminFindOneCollection?: Maybe<Collection>
+  adminFindOneNetwork?: Maybe<Network>
   adminFindOneUser?: Maybe<User>
   appConfig: AppConfig
   managerGetBotServer?: Maybe<DiscordServer>
@@ -330,6 +435,10 @@ export type QueryAdminFindManyBotArgs = {
   input: AdminFindManyBotInput
 }
 
+export type QueryAdminFindManyCollectionArgs = {
+  input: AdminFindManyCollectionInput
+}
+
 export type QueryAdminFindManyEmailArgs = {
   input: AdminFindManyEmailInput
 }
@@ -338,12 +447,24 @@ export type QueryAdminFindManyIdentityArgs = {
   input: AdminFindManyIdentityInput
 }
 
+export type QueryAdminFindManyNetworkArgs = {
+  input: AdminFindManyNetworkInput
+}
+
 export type QueryAdminFindManyUserArgs = {
   input: AdminFindManyUserInput
 }
 
 export type QueryAdminFindOneBotArgs = {
   botId: Scalars['String']['input']
+}
+
+export type QueryAdminFindOneCollectionArgs = {
+  collectionId: Scalars['String']['input']
+}
+
+export type QueryAdminFindOneNetworkArgs = {
+  networkId: Scalars['String']['input']
 }
 
 export type QueryAdminFindOneUserArgs = {
@@ -688,6 +809,104 @@ export type ManagerGetBotServerQuery = {
   } | null
 }
 
+export type CollectionDetailsFragment = {
+  __typename?: 'Collection'
+  createdAt?: Date | null
+  id: string
+  name?: string | null
+  account: string
+  network: NetworkType
+  updatedAt?: Date | null
+}
+
+export type AdminFindManyCollectionQueryVariables = Exact<{
+  input: AdminFindManyCollectionInput
+}>
+
+export type AdminFindManyCollectionQuery = {
+  __typename?: 'Query'
+  paging?: {
+    __typename?: 'CollectionPaging'
+    data: Array<{
+      __typename?: 'Collection'
+      createdAt?: Date | null
+      id: string
+      name?: string | null
+      account: string
+      network: NetworkType
+      updatedAt?: Date | null
+    }>
+    meta: {
+      __typename?: 'PagingMeta'
+      currentPage: number
+      isFirstPage: boolean
+      isLastPage: boolean
+      nextPage?: number | null
+      pageCount?: number | null
+      previousPage?: number | null
+      totalCount?: number | null
+    }
+  } | null
+}
+
+export type AdminFindOneCollectionQueryVariables = Exact<{
+  collectionId: Scalars['String']['input']
+}>
+
+export type AdminFindOneCollectionQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'Collection'
+    createdAt?: Date | null
+    id: string
+    name?: string | null
+    account: string
+    network: NetworkType
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminCreateCollectionMutationVariables = Exact<{
+  input: AdminCreateCollectionInput
+}>
+
+export type AdminCreateCollectionMutation = {
+  __typename?: 'Mutation'
+  created?: {
+    __typename?: 'Collection'
+    createdAt?: Date | null
+    id: string
+    name?: string | null
+    account: string
+    network: NetworkType
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminUpdateCollectionMutationVariables = Exact<{
+  collectionId: Scalars['String']['input']
+  input: AdminUpdateCollectionInput
+}>
+
+export type AdminUpdateCollectionMutation = {
+  __typename?: 'Mutation'
+  updated?: {
+    __typename?: 'Collection'
+    createdAt?: Date | null
+    id: string
+    name?: string | null
+    account: string
+    network: NetworkType
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminDeleteCollectionMutationVariables = Exact<{
+  collectionId: Scalars['String']['input']
+}>
+
+export type AdminDeleteCollectionMutation = { __typename?: 'Mutation'; deleted?: boolean | null }
+
 export type AppConfigDetailsFragment = {
   __typename?: 'AppConfig'
   authDiscordEnabled: boolean
@@ -974,6 +1193,104 @@ export type UserLinkIdentityMutation = {
   } | null
 }
 
+export type NetworkDetailsFragment = {
+  __typename?: 'Network'
+  createdAt?: Date | null
+  id: string
+  name: string
+  type: NetworkType
+  endpoint: string
+  updatedAt?: Date | null
+}
+
+export type AdminFindManyNetworkQueryVariables = Exact<{
+  input: AdminFindManyNetworkInput
+}>
+
+export type AdminFindManyNetworkQuery = {
+  __typename?: 'Query'
+  paging?: {
+    __typename?: 'NetworkPaging'
+    data: Array<{
+      __typename?: 'Network'
+      createdAt?: Date | null
+      id: string
+      name: string
+      type: NetworkType
+      endpoint: string
+      updatedAt?: Date | null
+    }>
+    meta: {
+      __typename?: 'PagingMeta'
+      currentPage: number
+      isFirstPage: boolean
+      isLastPage: boolean
+      nextPage?: number | null
+      pageCount?: number | null
+      previousPage?: number | null
+      totalCount?: number | null
+    }
+  } | null
+}
+
+export type AdminFindOneNetworkQueryVariables = Exact<{
+  networkId: Scalars['String']['input']
+}>
+
+export type AdminFindOneNetworkQuery = {
+  __typename?: 'Query'
+  item?: {
+    __typename?: 'Network'
+    createdAt?: Date | null
+    id: string
+    name: string
+    type: NetworkType
+    endpoint: string
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminCreateNetworkMutationVariables = Exact<{
+  input: AdminCreateNetworkInput
+}>
+
+export type AdminCreateNetworkMutation = {
+  __typename?: 'Mutation'
+  created?: {
+    __typename?: 'Network'
+    createdAt?: Date | null
+    id: string
+    name: string
+    type: NetworkType
+    endpoint: string
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminUpdateNetworkMutationVariables = Exact<{
+  networkId: Scalars['String']['input']
+  input: AdminUpdateNetworkInput
+}>
+
+export type AdminUpdateNetworkMutation = {
+  __typename?: 'Mutation'
+  updated?: {
+    __typename?: 'Network'
+    createdAt?: Date | null
+    id: string
+    name: string
+    type: NetworkType
+    endpoint: string
+    updatedAt?: Date | null
+  } | null
+}
+
+export type AdminDeleteNetworkMutationVariables = Exact<{
+  networkId: Scalars['String']['input']
+}>
+
+export type AdminDeleteNetworkMutation = { __typename?: 'Mutation'; deleted?: boolean | null }
+
 export type UserDetailsFragment = {
   __typename?: 'User'
   avatarUrl?: string | null
@@ -1193,6 +1510,16 @@ export const DiscordServerDetailsFragmentDoc = gql`
     permissions
   }
 `
+export const CollectionDetailsFragmentDoc = gql`
+  fragment CollectionDetails on Collection {
+    createdAt
+    id
+    name
+    account
+    network
+    updatedAt
+  }
+`
 export const AppConfigDetailsFragmentDoc = gql`
   fragment AppConfigDetails on AppConfig {
     authDiscordEnabled
@@ -1246,6 +1573,16 @@ export const IdentityChallengeDetailsFragmentDoc = gql`
     ip
     userAgent
     verified
+  }
+`
+export const NetworkDetailsFragmentDoc = gql`
+  fragment NetworkDetails on Network {
+    createdAt
+    id
+    name
+    type
+    endpoint
+    updatedAt
   }
 `
 export const UserDetailsFragmentDoc = gql`
@@ -1365,6 +1702,49 @@ export const ManagerGetBotServerDocument = gql`
   }
   ${DiscordServerDetailsFragmentDoc}
 `
+export const AdminFindManyCollectionDocument = gql`
+  query adminFindManyCollection($input: AdminFindManyCollectionInput!) {
+    paging: adminFindManyCollection(input: $input) {
+      data {
+        ...CollectionDetails
+      }
+      meta {
+        ...PagingMetaDetails
+      }
+    }
+  }
+  ${CollectionDetailsFragmentDoc}
+  ${PagingMetaDetailsFragmentDoc}
+`
+export const AdminFindOneCollectionDocument = gql`
+  query adminFindOneCollection($collectionId: String!) {
+    item: adminFindOneCollection(collectionId: $collectionId) {
+      ...CollectionDetails
+    }
+  }
+  ${CollectionDetailsFragmentDoc}
+`
+export const AdminCreateCollectionDocument = gql`
+  mutation adminCreateCollection($input: AdminCreateCollectionInput!) {
+    created: adminCreateCollection(input: $input) {
+      ...CollectionDetails
+    }
+  }
+  ${CollectionDetailsFragmentDoc}
+`
+export const AdminUpdateCollectionDocument = gql`
+  mutation adminUpdateCollection($collectionId: String!, $input: AdminUpdateCollectionInput!) {
+    updated: adminUpdateCollection(collectionId: $collectionId, input: $input) {
+      ...CollectionDetails
+    }
+  }
+  ${CollectionDetailsFragmentDoc}
+`
+export const AdminDeleteCollectionDocument = gql`
+  mutation adminDeleteCollection($collectionId: String!) {
+    deleted: adminDeleteCollection(collectionId: $collectionId)
+  }
+`
 export const UptimeDocument = gql`
   query uptime {
     uptime
@@ -1473,6 +1853,49 @@ export const UserLinkIdentityDocument = gql`
   }
   ${IdentityDetailsFragmentDoc}
 `
+export const AdminFindManyNetworkDocument = gql`
+  query adminFindManyNetwork($input: AdminFindManyNetworkInput!) {
+    paging: adminFindManyNetwork(input: $input) {
+      data {
+        ...NetworkDetails
+      }
+      meta {
+        ...PagingMetaDetails
+      }
+    }
+  }
+  ${NetworkDetailsFragmentDoc}
+  ${PagingMetaDetailsFragmentDoc}
+`
+export const AdminFindOneNetworkDocument = gql`
+  query adminFindOneNetwork($networkId: String!) {
+    item: adminFindOneNetwork(networkId: $networkId) {
+      ...NetworkDetails
+    }
+  }
+  ${NetworkDetailsFragmentDoc}
+`
+export const AdminCreateNetworkDocument = gql`
+  mutation adminCreateNetwork($input: AdminCreateNetworkInput!) {
+    created: adminCreateNetwork(input: $input) {
+      ...NetworkDetails
+    }
+  }
+  ${NetworkDetailsFragmentDoc}
+`
+export const AdminUpdateNetworkDocument = gql`
+  mutation adminUpdateNetwork($networkId: String!, $input: AdminUpdateNetworkInput!) {
+    updated: adminUpdateNetwork(networkId: $networkId, input: $input) {
+      ...NetworkDetails
+    }
+  }
+  ${NetworkDetailsFragmentDoc}
+`
+export const AdminDeleteNetworkDocument = gql`
+  mutation adminDeleteNetwork($networkId: String!) {
+    deleted: adminDeleteNetwork(networkId: $networkId)
+  }
+`
 export const AdminCreateUserDocument = gql`
   mutation adminCreateUser($input: AdminCreateUserInput!) {
     created: adminCreateUser(input: $input) {
@@ -1568,6 +1991,11 @@ const ManagerStopBotDocumentString = print(ManagerStopBotDocument)
 const ManagerLeaveBotServerDocumentString = print(ManagerLeaveBotServerDocument)
 const ManagerGetBotServersDocumentString = print(ManagerGetBotServersDocument)
 const ManagerGetBotServerDocumentString = print(ManagerGetBotServerDocument)
+const AdminFindManyCollectionDocumentString = print(AdminFindManyCollectionDocument)
+const AdminFindOneCollectionDocumentString = print(AdminFindOneCollectionDocument)
+const AdminCreateCollectionDocumentString = print(AdminCreateCollectionDocument)
+const AdminUpdateCollectionDocumentString = print(AdminUpdateCollectionDocument)
+const AdminDeleteCollectionDocumentString = print(AdminDeleteCollectionDocument)
 const UptimeDocumentString = print(UptimeDocument)
 const AppConfigDocumentString = print(AppConfigDocument)
 const AdminFindManyEmailDocumentString = print(AdminFindManyEmailDocument)
@@ -1582,6 +2010,11 @@ const UserDeleteIdentityDocumentString = print(UserDeleteIdentityDocument)
 const UserRequestIdentityChallengeDocumentString = print(UserRequestIdentityChallengeDocument)
 const UserVerifyIdentityChallengeDocumentString = print(UserVerifyIdentityChallengeDocument)
 const UserLinkIdentityDocumentString = print(UserLinkIdentityDocument)
+const AdminFindManyNetworkDocumentString = print(AdminFindManyNetworkDocument)
+const AdminFindOneNetworkDocumentString = print(AdminFindOneNetworkDocument)
+const AdminCreateNetworkDocumentString = print(AdminCreateNetworkDocument)
+const AdminUpdateNetworkDocumentString = print(AdminUpdateNetworkDocument)
+const AdminDeleteNetworkDocumentString = print(AdminDeleteNetworkDocument)
 const AdminCreateUserDocumentString = print(AdminCreateUserDocument)
 const AdminDeleteUserDocumentString = print(AdminDeleteUserDocument)
 const AdminFindManyUserDocumentString = print(AdminFindManyUserDocument)
@@ -1785,6 +2218,76 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'query',
       )
     },
+    adminFindManyCollection(
+      variables: AdminFindManyCollectionQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindManyCollectionQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindManyCollectionQuery>(AdminFindManyCollectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindManyCollection',
+        'query',
+      )
+    },
+    adminFindOneCollection(
+      variables: AdminFindOneCollectionQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindOneCollectionQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindOneCollectionQuery>(AdminFindOneCollectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindOneCollection',
+        'query',
+      )
+    },
+    adminCreateCollection(
+      variables: AdminCreateCollectionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminCreateCollectionMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminCreateCollectionMutation>(AdminCreateCollectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminCreateCollection',
+        'mutation',
+      )
+    },
+    adminUpdateCollection(
+      variables: AdminUpdateCollectionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminUpdateCollectionMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminUpdateCollectionMutation>(AdminUpdateCollectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminUpdateCollection',
+        'mutation',
+      )
+    },
+    adminDeleteCollection(
+      variables: AdminDeleteCollectionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminDeleteCollectionMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminDeleteCollectionMutation>(AdminDeleteCollectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminDeleteCollection',
+        'mutation',
+      )
+    },
     uptime(
       variables?: UptimeQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -1978,6 +2481,76 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'userLinkIdentity',
+        'mutation',
+      )
+    },
+    adminFindManyNetwork(
+      variables: AdminFindManyNetworkQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindManyNetworkQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindManyNetworkQuery>(AdminFindManyNetworkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindManyNetwork',
+        'query',
+      )
+    },
+    adminFindOneNetwork(
+      variables: AdminFindOneNetworkQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminFindOneNetworkQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminFindOneNetworkQuery>(AdminFindOneNetworkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminFindOneNetwork',
+        'query',
+      )
+    },
+    adminCreateNetwork(
+      variables: AdminCreateNetworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminCreateNetworkMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminCreateNetworkMutation>(AdminCreateNetworkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminCreateNetwork',
+        'mutation',
+      )
+    },
+    adminUpdateNetwork(
+      variables: AdminUpdateNetworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminUpdateNetworkMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminUpdateNetworkMutation>(AdminUpdateNetworkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminUpdateNetwork',
+        'mutation',
+      )
+    },
+    adminDeleteNetwork(
+      variables: AdminDeleteNetworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: AdminDeleteNetworkMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<AdminDeleteNetworkMutation>(AdminDeleteNetworkDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'adminDeleteNetwork',
         'mutation',
       )
     },
