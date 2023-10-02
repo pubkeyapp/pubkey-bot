@@ -183,6 +183,14 @@ type DiscordServer {
   permissions: [String!]
 }
 
+type DiscordServerRole {
+  color: Int!
+  id: String!
+  managed: Boolean!
+  name: String!
+  position: Int!
+}
+
 type Email {
   createdAt: DateTime!
   default: Boolean
@@ -314,6 +322,7 @@ type Query {
   adminFindOneUser(userId: String!): User
   appConfig: AppConfig!
   managerGetBotRoleConnections(botId: String!): [DiscordRoleConnection!]
+  managerGetBotRoles(botId: String!, serverId: String!): [DiscordServerRole!]
   managerGetBotServer(botId: String!, serverId: String!): DiscordServer
   managerGetBotServers(botId: String!): [DiscordServer!]
   me: User

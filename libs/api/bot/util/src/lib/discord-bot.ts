@@ -10,6 +10,14 @@ export interface RESTDiscordRoleConnection {
   key: string
 }
 
+export interface RESTDiscordRole {
+  id: string
+  name: string
+  color: number
+  managed: boolean
+  position: number
+}
+
 export class DiscordBot {
   private readonly logger = new Logger(DiscordBot.name)
   client?: Client
@@ -53,6 +61,25 @@ export class DiscordBot {
     const roles = await this.rest?.get(`/applications/${this.config.botId}/role-connections/metadata`)
 
     return (roles ?? []) as RESTDiscordRoleConnection[]
+  }
+
+  async getRoles(serverId: string): Promise<RESTDiscordRole[]> {
+    const server = await this.getServer(serverId)
+    const roles = await server?.roles.fetch()
+    const summary =
+      roles?.map((role) => ({
+        id: role.id,
+        name: role.name,
+        color: role.color,
+        managed: role.managed,
+        position: role.position,
+      })) ?? []
+
+    return summary.sort((a, b) => b.position - a.position)
+  }
+
+  async getServer(serverId: string) {
+    return await this.client?.guilds.fetch({ guild: serverId })
   }
 
   async leaveServer(serverId: string) {

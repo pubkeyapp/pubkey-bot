@@ -1,8 +1,9 @@
 import { Avatar, Button, Group, Text } from '@mantine/core'
 import { DiscordServer } from '@pubkey-bot/sdk'
 import { useAdminFindOneBot, useManagerGetBotServer } from '@pubkey-bot/web/bot/data-access'
-import { UiAlert, UiDebug, UiLoader, UiPageHeader, UiStack } from '@pubkey-bot/web/ui/core'
+import { UiAlert, UiDebug, UiLoader, UiPageHeader, UiStack, UiTabRoutes } from '@pubkey-bot/web/ui/core'
 import { useNavigate, useParams } from 'react-router-dom'
+import { WebAdminUiBotServerRoles } from './web-admin-ui-bot-server-roles'
 
 export function WebAdminUiBotServer({ botId }: { botId: string }) {
   const { serverId } = useParams() as { serverId: string }
@@ -47,7 +48,12 @@ export function WebAdminUiBotServer({ botId }: { botId: string }) {
           </Button>
         }
       />
-      <UiDebug data={item} open />
+      <UiTabRoutes
+        tabs={[
+          { value: 'roles', label: 'Roles', component: <WebAdminUiBotServerRoles botId={botId} serverId={serverId} /> },
+          { value: 'debug', label: 'Debug', component: <UiDebug data={item} open /> },
+        ]}
+      />
     </UiStack>
   )
 }

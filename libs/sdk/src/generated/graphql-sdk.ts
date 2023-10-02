@@ -206,6 +206,15 @@ export type DiscordServer = {
   permissions?: Maybe<Array<Scalars['String']['output']>>
 }
 
+export type DiscordServerRole = {
+  __typename?: 'DiscordServerRole'
+  color: Scalars['Int']['output']
+  id: Scalars['String']['output']
+  managed: Scalars['Boolean']['output']
+  name: Scalars['String']['output']
+  position: Scalars['Int']['output']
+}
+
 export type Email = {
   __typename?: 'Email'
   createdAt: Scalars['DateTime']['output']
@@ -460,6 +469,7 @@ export type Query = {
   adminFindOneUser?: Maybe<User>
   appConfig: AppConfig
   managerGetBotRoleConnections?: Maybe<Array<DiscordRoleConnection>>
+  managerGetBotRoles?: Maybe<Array<DiscordServerRole>>
   managerGetBotServer?: Maybe<DiscordServer>
   managerGetBotServers?: Maybe<Array<DiscordServer>>
   me?: Maybe<User>
@@ -512,6 +522,11 @@ export type QueryAdminFindOneUserArgs = {
 
 export type QueryManagerGetBotRoleConnectionsArgs = {
   botId: Scalars['String']['input']
+}
+
+export type QueryManagerGetBotRolesArgs = {
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
 }
 
 export type QueryManagerGetBotServerArgs = {
@@ -686,6 +701,15 @@ export type DiscordServerDetailsFragment = {
   permissions?: Array<string> | null
 }
 
+export type DiscordServerRoleDetailsFragment = {
+  __typename?: 'DiscordServerRole'
+  id: string
+  name: string
+  managed: boolean
+  color: number
+  position: number
+}
+
 export type DiscordRoleConnectionDetailsFragment = {
   __typename?: 'DiscordRoleConnection'
   key: string
@@ -841,6 +865,23 @@ export type ManagerGetBotRoleConnectionsQuery = {
     name: string
     type: DiscordRoleConnectionType
     description: string
+  }> | null
+}
+
+export type ManagerGetBotRolesQueryVariables = Exact<{
+  botId: Scalars['String']['input']
+  serverId: Scalars['String']['input']
+}>
+
+export type ManagerGetBotRolesQuery = {
+  __typename?: 'Query'
+  items?: Array<{
+    __typename?: 'DiscordServerRole'
+    id: string
+    name: string
+    managed: boolean
+    color: number
+    position: number
   }> | null
 }
 
@@ -1608,6 +1649,15 @@ export const DiscordServerDetailsFragmentDoc = gql`
     permissions
   }
 `
+export const DiscordServerRoleDetailsFragmentDoc = gql`
+  fragment DiscordServerRoleDetails on DiscordServerRole {
+    id
+    name
+    managed
+    color
+    position
+  }
+`
 export const DiscordRoleConnectionDetailsFragmentDoc = gql`
   fragment DiscordRoleConnectionDetails on DiscordRoleConnection {
     key
@@ -1799,6 +1849,14 @@ export const ManagerGetBotRoleConnectionsDocument = gql`
     }
   }
   ${DiscordRoleConnectionDetailsFragmentDoc}
+`
+export const ManagerGetBotRolesDocument = gql`
+  query managerGetBotRoles($botId: String!, $serverId: String!) {
+    items: managerGetBotRoles(botId: $botId, serverId: $serverId) {
+      ...DiscordServerRoleDetails
+    }
+  }
+  ${DiscordServerRoleDetailsFragmentDoc}
 `
 export const ManagerGetBotServersDocument = gql`
   query managerGetBotServers($botId: String!) {
@@ -2120,6 +2178,7 @@ const ManagerStartBotDocumentString = print(ManagerStartBotDocument)
 const ManagerStopBotDocumentString = print(ManagerStopBotDocument)
 const ManagerLeaveBotServerDocumentString = print(ManagerLeaveBotServerDocument)
 const ManagerGetBotRoleConnectionsDocumentString = print(ManagerGetBotRoleConnectionsDocument)
+const ManagerGetBotRolesDocumentString = print(ManagerGetBotRolesDocument)
 const ManagerGetBotServersDocumentString = print(ManagerGetBotServersDocument)
 const ManagerGetBotServerDocumentString = print(ManagerGetBotServerDocument)
 const ManagerAddBotRoleConnectionDocumentString = print(ManagerAddBotRoleConnectionDocument)
@@ -2334,6 +2393,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'managerGetBotRoleConnections',
+        'query',
+      )
+    },
+    managerGetBotRoles(
+      variables: ManagerGetBotRolesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerGetBotRolesQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerGetBotRolesQuery>(ManagerGetBotRolesDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerGetBotRoles',
         'query',
       )
     },

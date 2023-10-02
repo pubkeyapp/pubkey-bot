@@ -1,7 +1,8 @@
 import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ApiAuthGraphQLAdminGuard } from '@pubkey-bot/api/auth/data-access'
-import { ApiBotService, DiscordRoleConnection, DiscordServer } from '@pubkey-bot/api/bot/data-access'
+import { ApiBotService, DiscordRoleConnection, DiscordServer, DiscordServerRole } from '@pubkey-bot/api/bot/data-access'
+import { GraphQLJSON } from 'graphql-scalars'
 import { AddBotRoleConnectionInput } from '../../../data-access/src/lib/dto/add-bot-role-connection.input'
 
 @Resolver()
@@ -32,6 +33,11 @@ export class ApiBotManagerResolver {
   @Query(() => DiscordServer, { nullable: true })
   managerGetBotServer(@Args('botId') botId: string, @Args('serverId') serverId: string) {
     return this.service.manager.getBotServer(botId, serverId)
+  }
+
+  @Query(() => [DiscordServerRole], { nullable: true })
+  managerGetBotRoles(@Args('botId') botId: string, @Args('serverId') serverId: string) {
+    return this.service.manager.getBotRoles(botId, serverId)
   }
 
   @Mutation(() => Boolean, { nullable: true })

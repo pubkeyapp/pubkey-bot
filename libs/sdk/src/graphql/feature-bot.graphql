@@ -20,6 +20,15 @@ fragment DiscordServerDetails on DiscordServer {
   icon
   permissions
 }
+
+fragment DiscordServerRoleDetails on DiscordServerRole {
+  id
+  name
+  managed
+  color
+  position
+}
+
 fragment DiscordRoleConnectionDetails on DiscordRoleConnection {
   key
   name
@@ -75,6 +84,12 @@ mutation managerLeaveBotServer($botId: String!, $serverId: String!) {
 query managerGetBotRoleConnections($botId: String!) {
   items: managerGetBotRoleConnections(botId: $botId) {
     ...DiscordRoleConnectionDetails
+  }
+}
+
+query managerGetBotRoles($botId: String!, $serverId: String!) {
+  items: managerGetBotRoles(botId: $botId, serverId: $serverId) {
+    ...DiscordServerRoleDetails
   }
 }
 

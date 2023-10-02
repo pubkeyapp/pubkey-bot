@@ -52,7 +52,7 @@ export function WebAdminUiBotServers({ bot }: { bot: Bot }) {
       <Grid.Col span={9}>
         <Routes>
           <Route index element={<UiAlert message={`Select a server`} />} />
-          <Route path=":serverId" element={<WebAdminUiBotServer botId={bot.id} />} />
+          <Route path=":serverId/*" element={<WebAdminUiBotServer botId={bot.id} />} />
         </Routes>
       </Grid.Col>
     </Grid>

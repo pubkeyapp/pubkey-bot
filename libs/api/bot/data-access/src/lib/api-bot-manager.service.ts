@@ -4,6 +4,7 @@ import {
   convertToRESTDiscordRoleConnection,
   DiscordRoleConnection,
   DiscordServer,
+  DiscordServerRole,
 } from '@pubkey-bot/api/bot/data-access'
 import { createDiscordRestClient, DiscordBot } from '@pubkey-bot/api/bot/util'
 import { ApiCoreService } from '@pubkey-bot/api/core/data-access'
@@ -47,6 +48,10 @@ export class ApiBotManagerService implements OnModuleInit {
     return this.ensureBotInstance(botId)
       .getRoleConnections()
       .then((roles) => roles.map((role) => convertFromRESTDiscordRoleConnection(role)))
+  }
+
+  async getBotRoles(botId: string, serverId: string): Promise<DiscordServerRole[]> {
+    return this.ensureBotInstance(botId).getRoles(serverId)
   }
 
   async addBotRoleConnection(botId: string, input: AddBotRoleConnectionInput): Promise<DiscordRoleConnection[]> {
