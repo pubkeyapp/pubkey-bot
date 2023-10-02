@@ -1,7 +1,8 @@
 import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ApiAuthGraphQLAdminGuard } from '@pubkey-bot/api/auth/data-access'
-import { ApiBotService, DiscordServer } from '@pubkey-bot/api/bot/data-access'
+import { ApiBotService, DiscordRoleConnection, DiscordServer } from '@pubkey-bot/api/bot/data-access'
+import { AddBotRoleConnectionInput } from '../../../data-access/src/lib/dto/add-bot-role-connection.input'
 
 @Resolver()
 @UseGuards(ApiAuthGraphQLAdminGuard)
@@ -11,6 +12,21 @@ export class ApiBotManagerResolver {
   @Query(() => [DiscordServer], { nullable: true })
   managerGetBotServers(@Args('botId') botId: string) {
     return this.service.manager.getBotServers(botId)
+  }
+
+  @Query(() => [DiscordRoleConnection], { nullable: true })
+  managerGetBotRoleConnections(@Args('botId') botId: string) {
+    return this.service.manager.getBotRoleConnections(botId)
+  }
+
+  @Mutation(() => [DiscordRoleConnection], { nullable: true })
+  managerRemoveBotRoleConnection(@Args('botId') botId: string, @Args('key') key: string) {
+    return this.service.manager.removeBotRoleConnection(botId, key)
+  }
+
+  @Mutation(() => [DiscordRoleConnection], { nullable: true })
+  managerAddBotRoleConnection(@Args('botId') botId: string, @Args('input') input: AddBotRoleConnectionInput) {
+    return this.service.manager.addBotRoleConnection(botId, input)
   }
 
   @Query(() => DiscordServer, { nullable: true })

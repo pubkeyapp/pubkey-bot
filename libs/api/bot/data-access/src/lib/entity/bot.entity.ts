@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { BotApplication } from '@pubkey-bot/api/bot/util'
 import { GraphQLJSON } from 'graphql-scalars'
 import { BotStatus } from './bot-status.enum'
 
@@ -18,9 +19,4 @@ export class Bot {
   name!: string
   @Field(() => BotStatus, { nullable: true })
   status!: BotStatus
-}
-
-export interface BotApplication {
-  redirect_uris: string[]
-  role_connections_verification_url: string
 }

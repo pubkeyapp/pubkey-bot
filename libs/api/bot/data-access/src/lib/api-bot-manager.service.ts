@@ -1,8 +1,14 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
-import { DiscordServer } from '@pubkey-bot/api/bot/data-access'
+import {
+  convertFromRESTDiscordRoleConnection,
+  convertToRESTDiscordRoleConnection,
+  DiscordRoleConnection,
+  DiscordServer,
+} from '@pubkey-bot/api/bot/data-access'
 import { createDiscordRestClient, DiscordBot } from '@pubkey-bot/api/bot/util'
 import { ApiCoreService } from '@pubkey-bot/api/core/data-access'
 import { PermissionsString, User } from 'discord.js'
+import { AddBotRoleConnectionInput } from './dto/add-bot-role-connection.input'
 import { BotStatus } from './entity/bot-status.enum'
 
 @Injectable()
@@ -37,9 +43,27 @@ export class ApiBotManagerService implements OnModuleInit {
     return `https://discord.com/developers/applications/${botId}`
   }
 
+  async getBotRoleConnections(botId: string): Promise<DiscordRoleConnection[]> {
+    return this.ensureBotInstance(botId)
+      .getRoleConnections()
+      .then((roles) => roles.map((role) => convertFromRESTDiscordRoleConnection(role)))
+  }
+
+  async addBotRoleConnection(botId: string, input: AddBotRoleConnectionInput): Promise<DiscordRoleConnection[]> {
+    return this.ensureBotInstance(botId)
+      .addRoleConnection(convertToRESTDiscordRoleConnection(input))
+      .then((roles) => roles.map((role) => convertFromRESTDiscordRoleConnection(role)))
+  }
+
+  async removeBotRoleConnection(botId: string, roleKey: string): Promise<DiscordRoleConnection[]> {
+    return this.ensureBotInstance(botId)
+      .removeRoleConnection(roleKey)
+      .then((roles) => roles.map((role) => convertFromRESTDiscordRoleConnection(role)))
+  }
+
   async getBotServers(botId: string): Promise<DiscordServer[]> {
-    const instance = this.getBotInstance(botId)
-    const servers = await instance?.client?.guilds.fetch()
+    const instance = this.ensureBotInstance(botId)
+    const servers = await instance.client?.guilds.fetch()
 
     if (!servers) {
       return []
@@ -54,8 +78,8 @@ export class ApiBotManagerService implements OnModuleInit {
   }
 
   async getBotServer(botId: string, serverId: string): Promise<DiscordServer> {
-    const instance = this.getBotInstance(botId)
-    const server = await instance?.client?.guilds.fetch({ guild: serverId })
+    const instance = this.ensureBotInstance(botId)
+    const server = await instance.client?.guilds.fetch({ guild: serverId })
 
     if (!server) {
       throw new Error(`Server ${serverId} not found`)
@@ -78,17 +102,9 @@ export class ApiBotManagerService implements OnModuleInit {
 
     return url.toString()
   }
+
   async leaveBotServer(botId: string, serverId: string) {
-    const instance = this.getBotInstance(botId)
-    const server = await instance?.client?.guilds.fetch({ guild: serverId })
-
-    if (!server) {
-      throw new Error(`Server ${serverId} not found`)
-    }
-
-    const result = await server.leave()
-    this.logger.verbose(`Bot ${instance?.client?.user?.username} left server ${result.name}`)
-    return true
+    return this.ensureBotInstance(botId).leaveServer(serverId)
   }
 
   redirectUrl(botId: string) {
@@ -104,7 +120,7 @@ export class ApiBotManagerService implements OnModuleInit {
       throw new Error(`Bot ${bot.name} already started`)
     }
 
-    const instance = new DiscordBot(bot.token)
+    const instance = new DiscordBot({ botId, token: bot.token })
     await instance.start()
     this.bots.set(bot.id, instance)
 
@@ -125,6 +141,7 @@ export class ApiBotManagerService implements OnModuleInit {
 
     return true
   }
+
   verificationUrl(botId: string) {
     return `${this.core.config.apiUrl}/bot/${botId}/verification`
   }
@@ -132,6 +149,14 @@ export class ApiBotManagerService implements OnModuleInit {
   getBotInstance(botId: string, { throwIfNotStarted = true } = {}) {
     const instance = this.bots.get(botId)
     if (!instance && throwIfNotStarted) {
+      throw new Error(`Bot ${botId} not started`)
+    }
+    return instance
+  }
+
+  ensureBotInstance(botId: string) {
+    const instance = this.bots.get(botId)
+    if (!instance) {
       throw new Error(`Bot ${botId} not started`)
     }
     return instance

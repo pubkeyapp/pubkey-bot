@@ -23,6 +23,13 @@ export type Scalars = {
   JSON: { input: any; output: any }
 }
 
+export type AddBotRoleConnectionInput = {
+  description: Scalars['String']['input']
+  key: Scalars['String']['input']
+  name: Scalars['String']['input']
+  type: DiscordRoleConnectionType
+}
+
 export type AdminCreateBotInput = {
   clientId: Scalars['String']['input']
   clientSecret: Scalars['String']['input']
@@ -172,6 +179,25 @@ export type CollectionPaging = {
   meta: PagingMeta
 }
 
+export type DiscordRoleConnection = {
+  __typename?: 'DiscordRoleConnection'
+  description: Scalars['String']['output']
+  key: Scalars['String']['output']
+  name: Scalars['String']['output']
+  type: DiscordRoleConnectionType
+}
+
+export enum DiscordRoleConnectionType {
+  BooleanEqual = 'booleanEqual',
+  BooleanNotEqual = 'booleanNotEqual',
+  DateTimeGreaterThanOrEqual = 'dateTimeGreaterThanOrEqual',
+  DateTimeLessThanOrEqual = 'dateTimeLessThanOrEqual',
+  IntegerEqual = 'integerEqual',
+  IntegerGreaterThanOrEqual = 'integerGreaterThanOrEqual',
+  IntegerLessThanOrEqual = 'integerLessThanOrEqual',
+  IntegerNotEqual = 'integerNotEqual',
+}
+
 export type DiscordServer = {
   __typename?: 'DiscordServer'
   icon?: Maybe<Scalars['String']['output']>
@@ -256,7 +282,9 @@ export type Mutation = {
   adminUpdateUser?: Maybe<User>
   login?: Maybe<User>
   logout?: Maybe<Scalars['Boolean']['output']>
+  managerAddBotRoleConnection?: Maybe<Array<DiscordRoleConnection>>
   managerLeaveBotServer?: Maybe<Scalars['Boolean']['output']>
+  managerRemoveBotRoleConnection?: Maybe<Array<DiscordRoleConnection>>
   managerStartBot?: Maybe<Scalars['Boolean']['output']>
   managerStopBot?: Maybe<Scalars['Boolean']['output']>
   register?: Maybe<User>
@@ -343,9 +371,19 @@ export type MutationLoginArgs = {
   input: LoginInput
 }
 
+export type MutationManagerAddBotRoleConnectionArgs = {
+  botId: Scalars['String']['input']
+  input: AddBotRoleConnectionInput
+}
+
 export type MutationManagerLeaveBotServerArgs = {
   botId: Scalars['String']['input']
   serverId: Scalars['String']['input']
+}
+
+export type MutationManagerRemoveBotRoleConnectionArgs = {
+  botId: Scalars['String']['input']
+  key: Scalars['String']['input']
 }
 
 export type MutationManagerStartBotArgs = {
@@ -421,6 +459,7 @@ export type Query = {
   adminFindOneNetwork?: Maybe<Network>
   adminFindOneUser?: Maybe<User>
   appConfig: AppConfig
+  managerGetBotRoleConnections?: Maybe<Array<DiscordRoleConnection>>
   managerGetBotServer?: Maybe<DiscordServer>
   managerGetBotServers?: Maybe<Array<DiscordServer>>
   me?: Maybe<User>
@@ -469,6 +508,10 @@ export type QueryAdminFindOneNetworkArgs = {
 
 export type QueryAdminFindOneUserArgs = {
   userId: Scalars['String']['input']
+}
+
+export type QueryManagerGetBotRoleConnectionsArgs = {
+  botId: Scalars['String']['input']
 }
 
 export type QueryManagerGetBotServerArgs = {
@@ -643,6 +686,14 @@ export type DiscordServerDetailsFragment = {
   permissions?: Array<string> | null
 }
 
+export type DiscordRoleConnectionDetailsFragment = {
+  __typename?: 'DiscordRoleConnection'
+  key: string
+  name: string
+  type: DiscordRoleConnectionType
+  description: string
+}
+
 export type AdminFindManyBotQueryVariables = Exact<{
   input: AdminFindManyBotInput
 }>
@@ -778,6 +829,21 @@ export type ManagerLeaveBotServerMutationVariables = Exact<{
 
 export type ManagerLeaveBotServerMutation = { __typename?: 'Mutation'; left?: boolean | null }
 
+export type ManagerGetBotRoleConnectionsQueryVariables = Exact<{
+  botId: Scalars['String']['input']
+}>
+
+export type ManagerGetBotRoleConnectionsQuery = {
+  __typename?: 'Query'
+  items?: Array<{
+    __typename?: 'DiscordRoleConnection'
+    key: string
+    name: string
+    type: DiscordRoleConnectionType
+    description: string
+  }> | null
+}
+
 export type ManagerGetBotServersQueryVariables = Exact<{
   botId: Scalars['String']['input']
 }>
@@ -807,6 +873,38 @@ export type ManagerGetBotServerQuery = {
     icon?: string | null
     permissions?: Array<string> | null
   } | null
+}
+
+export type ManagerAddBotRoleConnectionMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+  input: AddBotRoleConnectionInput
+}>
+
+export type ManagerAddBotRoleConnectionMutation = {
+  __typename?: 'Mutation'
+  items?: Array<{
+    __typename?: 'DiscordRoleConnection'
+    key: string
+    name: string
+    type: DiscordRoleConnectionType
+    description: string
+  }> | null
+}
+
+export type ManagerRemoveBotRoleConnectionMutationVariables = Exact<{
+  botId: Scalars['String']['input']
+  key: Scalars['String']['input']
+}>
+
+export type ManagerRemoveBotRoleConnectionMutation = {
+  __typename?: 'Mutation'
+  items?: Array<{
+    __typename?: 'DiscordRoleConnection'
+    key: string
+    name: string
+    type: DiscordRoleConnectionType
+    description: string
+  }> | null
 }
 
 export type CollectionDetailsFragment = {
@@ -1510,6 +1608,14 @@ export const DiscordServerDetailsFragmentDoc = gql`
     permissions
   }
 `
+export const DiscordRoleConnectionDetailsFragmentDoc = gql`
+  fragment DiscordRoleConnectionDetails on DiscordRoleConnection {
+    key
+    name
+    type
+    description
+  }
+`
 export const CollectionDetailsFragmentDoc = gql`
   fragment CollectionDetails on Collection {
     createdAt
@@ -1686,6 +1792,14 @@ export const ManagerLeaveBotServerDocument = gql`
     left: managerLeaveBotServer(botId: $botId, serverId: $serverId)
   }
 `
+export const ManagerGetBotRoleConnectionsDocument = gql`
+  query managerGetBotRoleConnections($botId: String!) {
+    items: managerGetBotRoleConnections(botId: $botId) {
+      ...DiscordRoleConnectionDetails
+    }
+  }
+  ${DiscordRoleConnectionDetailsFragmentDoc}
+`
 export const ManagerGetBotServersDocument = gql`
   query managerGetBotServers($botId: String!) {
     items: managerGetBotServers(botId: $botId) {
@@ -1701,6 +1815,22 @@ export const ManagerGetBotServerDocument = gql`
     }
   }
   ${DiscordServerDetailsFragmentDoc}
+`
+export const ManagerAddBotRoleConnectionDocument = gql`
+  mutation managerAddBotRoleConnection($botId: String!, $input: AddBotRoleConnectionInput!) {
+    items: managerAddBotRoleConnection(botId: $botId, input: $input) {
+      ...DiscordRoleConnectionDetails
+    }
+  }
+  ${DiscordRoleConnectionDetailsFragmentDoc}
+`
+export const ManagerRemoveBotRoleConnectionDocument = gql`
+  mutation managerRemoveBotRoleConnection($botId: String!, $key: String!) {
+    items: managerRemoveBotRoleConnection(botId: $botId, key: $key) {
+      ...DiscordRoleConnectionDetails
+    }
+  }
+  ${DiscordRoleConnectionDetailsFragmentDoc}
 `
 export const AdminFindManyCollectionDocument = gql`
   query adminFindManyCollection($input: AdminFindManyCollectionInput!) {
@@ -1989,8 +2119,11 @@ const AdminDeleteBotDocumentString = print(AdminDeleteBotDocument)
 const ManagerStartBotDocumentString = print(ManagerStartBotDocument)
 const ManagerStopBotDocumentString = print(ManagerStopBotDocument)
 const ManagerLeaveBotServerDocumentString = print(ManagerLeaveBotServerDocument)
+const ManagerGetBotRoleConnectionsDocumentString = print(ManagerGetBotRoleConnectionsDocument)
 const ManagerGetBotServersDocumentString = print(ManagerGetBotServersDocument)
 const ManagerGetBotServerDocumentString = print(ManagerGetBotServerDocument)
+const ManagerAddBotRoleConnectionDocumentString = print(ManagerAddBotRoleConnectionDocument)
+const ManagerRemoveBotRoleConnectionDocumentString = print(ManagerRemoveBotRoleConnectionDocument)
 const AdminFindManyCollectionDocumentString = print(AdminFindManyCollectionDocument)
 const AdminFindOneCollectionDocumentString = print(AdminFindOneCollectionDocument)
 const AdminCreateCollectionDocumentString = print(AdminCreateCollectionDocument)
@@ -2190,6 +2323,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         'mutation',
       )
     },
+    managerGetBotRoleConnections(
+      variables: ManagerGetBotRoleConnectionsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerGetBotRoleConnectionsQuery; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerGetBotRoleConnectionsQuery>(ManagerGetBotRoleConnectionsDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerGetBotRoleConnections',
+        'query',
+      )
+    },
     managerGetBotServers(
       variables: ManagerGetBotServersQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
@@ -2216,6 +2363,40 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         'managerGetBotServer',
         'query',
+      )
+    },
+    managerAddBotRoleConnection(
+      variables: ManagerAddBotRoleConnectionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{ data: ManagerAddBotRoleConnectionMutation; extensions?: any; headers: Dom.Headers; status: number }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerAddBotRoleConnectionMutation>(ManagerAddBotRoleConnectionDocumentString, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'managerAddBotRoleConnection',
+        'mutation',
+      )
+    },
+    managerRemoveBotRoleConnection(
+      variables: ManagerRemoveBotRoleConnectionMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+    ): Promise<{
+      data: ManagerRemoveBotRoleConnectionMutation
+      extensions?: any
+      headers: Dom.Headers
+      status: number
+    }> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.rawRequest<ManagerRemoveBotRoleConnectionMutation>(
+            ManagerRemoveBotRoleConnectionDocumentString,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'managerRemoveBotRoleConnection',
+        'mutation',
       )
     },
     adminFindManyCollection(

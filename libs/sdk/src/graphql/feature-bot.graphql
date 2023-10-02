@@ -20,6 +20,12 @@ fragment DiscordServerDetails on DiscordServer {
   icon
   permissions
 }
+fragment DiscordRoleConnectionDetails on DiscordRoleConnection {
+  key
+  name
+  type
+  description
+}
 
 query adminFindManyBot($input: AdminFindManyBotInput!) {
   paging: adminFindManyBot(input: $input) {
@@ -66,6 +72,12 @@ mutation managerLeaveBotServer($botId: String!, $serverId: String!) {
   left: managerLeaveBotServer(botId: $botId, serverId: $serverId)
 }
 
+query managerGetBotRoleConnections($botId: String!) {
+  items: managerGetBotRoleConnections(botId: $botId) {
+    ...DiscordRoleConnectionDetails
+  }
+}
+
 query managerGetBotServers($botId: String!) {
   items: managerGetBotServers(botId: $botId) {
     ...DiscordServerDetails
@@ -75,5 +87,17 @@ query managerGetBotServers($botId: String!) {
 query managerGetBotServer($botId: String!, $serverId: String!) {
   item: managerGetBotServer(botId: $botId, serverId: $serverId) {
     ...DiscordServerDetails
+  }
+}
+
+mutation managerAddBotRoleConnection($botId: String!, $input: AddBotRoleConnectionInput!) {
+  items: managerAddBotRoleConnection(botId: $botId, input: $input) {
+    ...DiscordRoleConnectionDetails
+  }
+}
+
+mutation managerRemoveBotRoleConnection($botId: String!, $key: String!) {
+  items: managerRemoveBotRoleConnection(botId: $botId, key: $key) {
+    ...DiscordRoleConnectionDetails
   }
 }

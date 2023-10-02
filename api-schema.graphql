@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddBotRoleConnectionInput {
+  description: String!
+  key: String!
+  name: String!
+  type: DiscordRoleConnectionType!
+}
+
 input AdminCreateBotInput {
   clientId: String!
   clientSecret: String!
@@ -151,6 +158,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DiscordRoleConnection {
+  description: String!
+  key: String!
+  name: String!
+  type: DiscordRoleConnectionType!
+}
+
+enum DiscordRoleConnectionType {
+  booleanEqual
+  booleanNotEqual
+  dateTimeGreaterThanOrEqual
+  dateTimeLessThanOrEqual
+  integerEqual
+  integerGreaterThanOrEqual
+  integerLessThanOrEqual
+  integerNotEqual
+}
+
 type DiscordServer {
   icon: String
   id: String!
@@ -235,7 +260,9 @@ type Mutation {
   adminUpdateUser(input: AdminUpdateUserInput!, userId: String!): User
   login(input: LoginInput!): User
   logout: Boolean
+  managerAddBotRoleConnection(botId: String!, input: AddBotRoleConnectionInput!): [DiscordRoleConnection!]
   managerLeaveBotServer(botId: String!, serverId: String!): Boolean
+  managerRemoveBotRoleConnection(botId: String!, key: String!): [DiscordRoleConnection!]
   managerStartBot(botId: String!): Boolean
   managerStopBot(botId: String!): Boolean
   register(input: RegisterInput!): User
@@ -286,6 +313,7 @@ type Query {
   adminFindOneNetwork(networkId: String!): Network
   adminFindOneUser(userId: String!): User
   appConfig: AppConfig!
+  managerGetBotRoleConnections(botId: String!): [DiscordRoleConnection!]
   managerGetBotServer(botId: String!, serverId: String!): DiscordServer
   managerGetBotServers(botId: String!): [DiscordServer!]
   me: User

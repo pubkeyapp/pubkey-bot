@@ -22,6 +22,7 @@ export class ApiBotController {
   @Get(':botId/verification')
   async roleVerification(@Param('botId') botId: string) {
     // const res = await this.service.findOne(botId)
+    console.log(`roleVerification ${botId}`)
     return {
       id: botId,
     }

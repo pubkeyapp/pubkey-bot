@@ -3,6 +3,7 @@ import { useAdminFindOneBot } from '@pubkey-bot/web/bot/data-access'
 import { UiAdminPage, UiBack, UiError, UiLoader, UiTabRoutes } from '@pubkey-bot/web/ui/core'
 import { useParams } from 'react-router-dom'
 import { AdminUiBotCommands } from './admin-ui-bot-commands'
+import { WebAdminBotDetailRoleConnectionsTab } from './web-admin-bot-detail-role-connections-tab'
 import { WebAdminBotDetailOverviewTab } from './web-admin-bot-detail-overview.tab'
 import { WebAdminBotDetailServersTab } from './web-admin-bot-detail-servers.tab'
 import { WebAdminBotDetailSettingsTab } from './web-admin-bot-detail-settings.tab'
@@ -40,6 +41,11 @@ export function WebAdminBotDetailFeature() {
             value: 'servers',
             label: 'Servers',
             component: <WebAdminBotDetailServersTab botId={botId} />,
+          },
+          {
+            value: 'role-connections',
+            label: 'Role Connections',
+            component: <WebAdminBotDetailRoleConnectionsTab botId={botId} />,
           },
           {
             value: 'settings',

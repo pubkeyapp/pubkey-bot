@@ -7,7 +7,7 @@ import { AdminFindManyBotInput } from './dto/admin-find-many-bot.input'
 import { AdminUpdateBotInput } from './dto/admin-update-bot.input'
 import { BotPaging } from './entity/bot-paging.entity'
 import { getAdminBotWhereInput } from './helpers/get-admin-bot-where.input'
-import { Bot, BotApplication } from './entity/bot.entity'
+import { Bot } from './entity/bot.entity'
 
 @Injectable()
 export class ApiBotAdminService {
@@ -56,7 +56,7 @@ export class ApiBotAdminService {
       return bot
     }
 
-    const application = (await instance.rest?.get(`/applications/${botId}`)) as BotApplication
+    const application = await instance.getApplication()
 
     return { ...bot, application }
   }
