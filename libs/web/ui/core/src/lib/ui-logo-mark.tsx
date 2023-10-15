@@ -1,5 +1,10 @@
-import { PubKeyLogo } from '@pubkeyapp/logo'
+import { Image, useMantineTheme } from '@mantine/core'
 
 export function UiLogoMark({ size }: { size?: number }) {
-  return <PubKeyLogo size={size ?? 48} />
+  const { colorScheme } = useMantineTheme()
+
+  if (colorScheme === 'dark') {
+    return <Image height={size} src="/assets/pubkey-link-logo-white.png" />
+  }
+  return <Image height={size} src="/assets/pubkey-link-logo-black.png" />
 }
