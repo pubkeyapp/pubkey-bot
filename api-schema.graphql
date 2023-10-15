@@ -17,7 +17,6 @@ input AdminCreateBotInput {
 
 input AdminCreateCollectionInput {
   account: String!
-  name: String!
   network: NetworkType!
 }
 
@@ -83,7 +82,11 @@ input AdminUpdateBotInput {
 }
 
 input AdminUpdateCollectionInput {
+  description: String
+  imageUrl: String
+  metadataUrl: String
   name: String
+  symbol: String
 }
 
 input AdminUpdateEmailInput {
@@ -142,9 +145,13 @@ enum BotStatus {
 type Collection {
   account: String!
   createdAt: DateTime
+  description: String
   id: String!
+  imageUrl: String
+  metadataUrl: String
   name: String
   network: NetworkType!
+  symbol: String
   updatedAt: DateTime
 }
 

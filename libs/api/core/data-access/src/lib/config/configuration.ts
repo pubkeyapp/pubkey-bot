@@ -34,6 +34,7 @@ export interface ApiCoreConfig {
   discordClientId: string
   discordClientSecret: string
   discordToken: string
+  heliusApiKey: string
   host: string
   port: number
   webUrl: string
@@ -56,6 +57,7 @@ export function configuration(): ApiCoreConfig {
     discordClientId: process.env['DISCORD_CLIENT_ID'] as string,
     discordClientSecret: process.env['DISCORD_CLIENT_SECRET'] as string,
     discordToken: process.env['DISCORD_TOKEN'] as string,
+    heliusApiKey: process.env['HELIUS_API_KEY'] as string,
     host: process.env['HOST'] as string,
     port: parseInt(process.env['PORT'] as string, 10) || 3000,
     webUrl: WEB_URL,

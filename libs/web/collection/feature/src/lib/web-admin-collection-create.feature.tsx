@@ -12,7 +12,11 @@ export function WebAdminCollectionCreateFeature() {
 
   async function submit(input: AdminCreateCollectionInput) {
     return createCollection(input)
-      .then((res) => navigate(`/admin/collections/${res?.id}`))
+      .then((res) => {
+        if (res?.id) {
+          navigate(`/admin/collections/${res?.id}`)
+        }
+      })
       .then(() => true)
       .catch((err) => {
         showNotificationError(err.message)

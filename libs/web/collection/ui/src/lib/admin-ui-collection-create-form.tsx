@@ -10,14 +10,12 @@ export interface AdminUiCreateCollectionFormProps {
 export function AdminUiCreateCollectionForm({ children, submit }: AdminUiCreateCollectionFormProps) {
   const model: AdminCreateCollectionInput = {
     account: '',
-    name: '',
     network: NetworkType.SolanaMainnet,
   }
 
   const fields: UiFormField<AdminCreateCollectionInput>[] = [
-    formFieldText('name', { label: 'Name', required: true }),
-    formFieldText('account', { label: 'Account', required: true }),
     formFieldSelect('network', { label: 'Network', required: true, options: getEnumOptions(NetworkType) }),
+    formFieldText('account', { label: 'Account', required: true }),
   ]
   return (
     <UiForm model={model} fields={fields} submit={(res) => submit(res as AdminCreateCollectionInput)}>

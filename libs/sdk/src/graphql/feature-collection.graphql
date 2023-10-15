@@ -1,9 +1,13 @@
 fragment CollectionDetails on Collection {
-  createdAt
-  id
-  name
   account
+  createdAt
+  description
+  id
+  imageUrl
+  metadataUrl
+  name
   network
+  symbol
   updatedAt
 }
 

@@ -15,4 +15,12 @@ export class Collection {
   network!: NetworkType
   @Field({ nullable: true })
   name?: string | null
+  @Field({ nullable: true })
+  description?: string | null
+  @Field({ nullable: true })
+  symbol?: string | null
+  @Field({ nullable: true })
+  imageUrl?: string | null
+  @Field({ nullable: true })
+  metadataUrl?: string | null
 }

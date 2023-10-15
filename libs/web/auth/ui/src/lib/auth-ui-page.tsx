@@ -8,7 +8,7 @@ export function AuthUiPage({ children }: { children: ReactNode }) {
       <Box miw={400} p="lg">
         <UiStack spacing={48}>
           <Group position="center">
-            <UiLogoMark size={48} />
+            <UiLogoMark size={72} />
           </Group>
           {children}
         </UiStack>

@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { ApiCoreService } from '@pubkey-bot/api/core/data-access'
+import { ApiNetworkService } from '@pubkey-bot/api/network/data-access'
 import { AdminCreateCollectionInput } from './dto/admin-create-collection.input'
 import { AdminFindManyCollectionInput } from './dto/admin-find-many-collection.input'
 import { AdminUpdateCollectionInput } from './dto/admin-update-collection.input'
@@ -8,10 +10,43 @@ import { getAdminCollectionWhereInput } from './helpers/get-admin-collection-whe
 
 @Injectable()
 export class ApiCollectionAdminService {
-  constructor(private readonly core: ApiCoreService) {}
+  private readonly logger = new Logger(ApiCollectionAdminService.name)
+  constructor(private readonly core: ApiCoreService, private readonly network: ApiNetworkService) {}
 
   async createCollection(input: AdminCreateCollectionInput) {
-    return this.core.data.collection.create({ data: input })
+    const found = await this.core.data.collection.findUnique({
+      where: {
+        account_network: { account: input.account, network: input.network },
+      },
+    })
+    if (found) {
+      throw new Error(`Collection ${input.network} => ${input.account} already exists`)
+    }
+
+    const tokenMetadata = await this.network.getTokenMetadata(input.network, input.account)
+    if (!tokenMetadata?.length || !tokenMetadata[0]?.offChainMetadata?.metadata) {
+      throw new Error(`Collection ${input.network} => ${input.account} not found`)
+    }
+
+    const offChainMetadata = tokenMetadata[0]?.offChainMetadata
+    const metadata = offChainMetadata?.metadata
+
+    const data: Prisma.CollectionCreateInput = {
+      ...input,
+      description: metadata.description,
+      imageUrl: metadata.image,
+      metadataUrl: offChainMetadata.uri,
+      name: metadata.name,
+      symbol: metadata.symbol,
+    }
+
+    const created = await this.core.data.collection.create({ data })
+    if (!created) {
+      throw new Error(`Collection ${input.network} => ${input.account} not created`)
+    } else {
+      this.logger.verbose(`Collection ${input.network} => ${input.account} created`)
+    }
+    return created
   }
 
   async deleteCollection(collectionId: string) {

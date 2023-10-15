@@ -38,7 +38,6 @@ export type AdminCreateBotInput = {
 
 export type AdminCreateCollectionInput = {
   account: Scalars['String']['input']
-  name: Scalars['String']['input']
   network: NetworkType
 }
 
@@ -104,7 +103,11 @@ export type AdminUpdateBotInput = {
 }
 
 export type AdminUpdateCollectionInput = {
+  description?: InputMaybe<Scalars['String']['input']>
+  imageUrl?: InputMaybe<Scalars['String']['input']>
+  metadataUrl?: InputMaybe<Scalars['String']['input']>
   name?: InputMaybe<Scalars['String']['input']>
+  symbol?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AdminUpdateEmailInput = {
@@ -167,9 +170,13 @@ export type Collection = {
   __typename?: 'Collection'
   account: Scalars['String']['output']
   createdAt?: Maybe<Scalars['DateTime']['output']>
+  description?: Maybe<Scalars['String']['output']>
   id: Scalars['String']['output']
+  imageUrl?: Maybe<Scalars['String']['output']>
+  metadataUrl?: Maybe<Scalars['String']['output']>
   name?: Maybe<Scalars['String']['output']>
   network: NetworkType
+  symbol?: Maybe<Scalars['String']['output']>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
 }
 
@@ -950,11 +957,15 @@ export type ManagerRemoveBotRoleConnectionMutation = {
 
 export type CollectionDetailsFragment = {
   __typename?: 'Collection'
-  createdAt?: Date | null
-  id: string
-  name?: string | null
   account: string
+  createdAt?: Date | null
+  description?: string | null
+  id: string
+  imageUrl?: string | null
+  metadataUrl?: string | null
+  name?: string | null
   network: NetworkType
+  symbol?: string | null
   updatedAt?: Date | null
 }
 
@@ -968,11 +979,15 @@ export type AdminFindManyCollectionQuery = {
     __typename?: 'CollectionPaging'
     data: Array<{
       __typename?: 'Collection'
-      createdAt?: Date | null
-      id: string
-      name?: string | null
       account: string
+      createdAt?: Date | null
+      description?: string | null
+      id: string
+      imageUrl?: string | null
+      metadataUrl?: string | null
+      name?: string | null
       network: NetworkType
+      symbol?: string | null
       updatedAt?: Date | null
     }>
     meta: {
@@ -996,11 +1011,15 @@ export type AdminFindOneCollectionQuery = {
   __typename?: 'Query'
   item?: {
     __typename?: 'Collection'
-    createdAt?: Date | null
-    id: string
-    name?: string | null
     account: string
+    createdAt?: Date | null
+    description?: string | null
+    id: string
+    imageUrl?: string | null
+    metadataUrl?: string | null
+    name?: string | null
     network: NetworkType
+    symbol?: string | null
     updatedAt?: Date | null
   } | null
 }
@@ -1013,11 +1032,15 @@ export type AdminCreateCollectionMutation = {
   __typename?: 'Mutation'
   created?: {
     __typename?: 'Collection'
-    createdAt?: Date | null
-    id: string
-    name?: string | null
     account: string
+    createdAt?: Date | null
+    description?: string | null
+    id: string
+    imageUrl?: string | null
+    metadataUrl?: string | null
+    name?: string | null
     network: NetworkType
+    symbol?: string | null
     updatedAt?: Date | null
   } | null
 }
@@ -1031,11 +1054,15 @@ export type AdminUpdateCollectionMutation = {
   __typename?: 'Mutation'
   updated?: {
     __typename?: 'Collection'
-    createdAt?: Date | null
-    id: string
-    name?: string | null
     account: string
+    createdAt?: Date | null
+    description?: string | null
+    id: string
+    imageUrl?: string | null
+    metadataUrl?: string | null
+    name?: string | null
     network: NetworkType
+    symbol?: string | null
     updatedAt?: Date | null
   } | null
 }
@@ -1668,11 +1695,15 @@ export const DiscordRoleConnectionDetailsFragmentDoc = gql`
 `
 export const CollectionDetailsFragmentDoc = gql`
   fragment CollectionDetails on Collection {
-    createdAt
-    id
-    name
     account
+    createdAt
+    description
+    id
+    imageUrl
+    metadataUrl
+    name
     network
+    symbol
     updatedAt
   }
 `

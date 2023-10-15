@@ -1,9 +1,10 @@
-import { ActionIcon, Anchor, Group, ScrollArea } from '@mantine/core'
+import { ActionIcon, Anchor, Badge, Code, Group, ScrollArea, Stack } from '@mantine/core'
 import { Collection } from '@pubkey-bot/sdk'
 import { UiGroup } from '@pubkey-bot/web/ui/core'
 import { IconPencil, IconTrash } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable'
 import { Link } from 'react-router-dom'
+import { WebUiCollectionAvatar } from './web-ui-collection-avatar'
 
 interface AdminCollectionTableProps {
   collections: Collection[]
@@ -19,17 +20,25 @@ export function AdminUiCollectionTable({ deleteCollection, collections = [] }: A
         shadow="xs"
         columns={[
           {
-            accessor: 'name',
-            render: (item) => {
-              const link = `/admin/collections/${item.id}`
-              return (
-                <UiGroup position="left" spacing={4} align="baseline">
-                  <Anchor component={Link} to={link} size="sm" weight={500}>
+            accessor: 'collection',
+            render: (item) => (
+              <Group spacing="xs">
+                <WebUiCollectionAvatar collection={item} size={92} />
+                <Stack spacing="xs">
+                  <Anchor component={Link} to={`${item.id}`} size="xl">
                     {item.name}
                   </Anchor>
-                </UiGroup>
-              )
-            },
+                  <Group>
+                    <Code color="brand">{item.account}</Code>
+                  </Group>
+                  <Group>
+                    <Badge size="sm" color="brand">
+                      {item.network}
+                    </Badge>
+                  </Group>
+                </Stack>
+              </Group>
+            ),
           },
           {
             accessor: 'actions',
