@@ -17,6 +17,8 @@ export class Collection {
   @Field({ nullable: true })
   name?: string | null
   @Field({ nullable: true })
+  vaultId?: string | null
+  @Field({ nullable: true })
   description?: string | null
   @Field({ nullable: true })
   symbol?: string | null

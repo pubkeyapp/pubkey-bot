@@ -14,6 +14,7 @@ export function AdminUiUpdateCollectionForm({ submit, collection }: AdminUiUpdat
     metadataUrl: collection.metadataUrl ?? '',
     name: collection.name ?? '',
     symbol: collection.symbol ?? '',
+    vaultId: collection.vaultId ?? '',
   }
 
   const fields: UiFormField<AdminUpdateCollectionInput>[] = [
@@ -22,6 +23,7 @@ export function AdminUiUpdateCollectionForm({ submit, collection }: AdminUiUpdat
     formFieldTextarea('description', { label: 'Description' }),
     formFieldText('imageUrl', { label: 'Image URL' }),
     formFieldText('metadataUrl', { label: 'Metadata URL' }),
+    formFieldText('vaultId', { label: 'Vault ID (Anybodies)' }),
   ]
   return (
     <UiForm model={model} fields={fields} submit={(res) => submit(res as AdminUpdateCollectionInput)}>

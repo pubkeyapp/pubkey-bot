@@ -120,6 +120,7 @@ export type AdminUpdateCollectionInput = {
   metadataUrl?: InputMaybe<Scalars['String']['input']>
   name?: InputMaybe<Scalars['String']['input']>
   symbol?: InputMaybe<Scalars['String']['input']>
+  vaultId?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AdminUpdateConnectionInput = {
@@ -195,6 +196,7 @@ export type Collection = {
   network: NetworkType
   symbol?: Maybe<Scalars['String']['output']>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
+  vaultId?: Maybe<Scalars['String']['output']>
 }
 
 export type CollectionAsset = {
@@ -1118,6 +1120,7 @@ export type UserGetBotRoleConnectionsQuery = {
       network: NetworkType
       symbol?: string | null
       updatedAt?: Date | null
+      vaultId?: string | null
       assets?: Array<{
         __typename?: 'CollectionAsset'
         id?: string | null
@@ -1177,6 +1180,7 @@ export type UserGetBotCollectionAssetsQuery = {
     network: NetworkType
     symbol?: string | null
     updatedAt?: Date | null
+    vaultId?: string | null
     assets?: Array<{
       __typename?: 'CollectionAsset'
       id?: string | null
@@ -1212,6 +1216,7 @@ export type CollectionDetailsFragment = {
   network: NetworkType
   symbol?: string | null
   updatedAt?: Date | null
+  vaultId?: string | null
   assets?: Array<{
     __typename?: 'CollectionAsset'
     id?: string | null
@@ -1275,6 +1280,7 @@ export type AdminFindManyCollectionQuery = {
       network: NetworkType
       symbol?: string | null
       updatedAt?: Date | null
+      vaultId?: string | null
       assets?: Array<{
         __typename?: 'CollectionAsset'
         id?: string | null
@@ -1327,6 +1333,7 @@ export type AdminFindOneCollectionQuery = {
     network: NetworkType
     symbol?: string | null
     updatedAt?: Date | null
+    vaultId?: string | null
     assets?: Array<{
       __typename?: 'CollectionAsset'
       id?: string | null
@@ -1368,6 +1375,7 @@ export type AdminCreateCollectionMutation = {
     network: NetworkType
     symbol?: string | null
     updatedAt?: Date | null
+    vaultId?: string | null
     assets?: Array<{
       __typename?: 'CollectionAsset'
       id?: string | null
@@ -1410,6 +1418,7 @@ export type AdminUpdateCollectionMutation = {
     network: NetworkType
     symbol?: string | null
     updatedAt?: Date | null
+    vaultId?: string | null
     assets?: Array<{
       __typename?: 'CollectionAsset'
       id?: string | null
@@ -1459,6 +1468,7 @@ export type ConnectionDetailsFragment = {
     network: NetworkType
     symbol?: string | null
     updatedAt?: Date | null
+    vaultId?: string | null
     assets?: Array<{
       __typename?: 'CollectionAsset'
       id?: string | null
@@ -1510,6 +1520,7 @@ export type AdminFindManyConnectionQuery = {
         network: NetworkType
         symbol?: string | null
         updatedAt?: Date | null
+        vaultId?: string | null
         assets?: Array<{
           __typename?: 'CollectionAsset'
           id?: string | null
@@ -1571,6 +1582,7 @@ export type AdminFindOneConnectionQuery = {
       network: NetworkType
       symbol?: string | null
       updatedAt?: Date | null
+      vaultId?: string | null
       assets?: Array<{
         __typename?: 'CollectionAsset'
         id?: string | null
@@ -1621,6 +1633,7 @@ export type AdminCreateConnectionMutation = {
       network: NetworkType
       symbol?: string | null
       updatedAt?: Date | null
+      vaultId?: string | null
       assets?: Array<{
         __typename?: 'CollectionAsset'
         id?: string | null
@@ -1672,6 +1685,7 @@ export type AdminUpdateConnectionMutation = {
       network: NetworkType
       symbol?: string | null
       updatedAt?: Date | null
+      vaultId?: string | null
       assets?: Array<{
         __typename?: 'CollectionAsset'
         id?: string | null
@@ -2355,6 +2369,7 @@ export const CollectionDetailsFragmentDoc = gql`
     network
     symbol
     updatedAt
+    vaultId
     assets {
       ...CollectionAssetDetails
     }

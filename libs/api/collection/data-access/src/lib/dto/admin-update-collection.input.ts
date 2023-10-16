@@ -12,4 +12,6 @@ export class AdminUpdateCollectionInput {
   imageUrl?: string
   @Field({ nullable: true })
   metadataUrl?: string
+  @Field({ nullable: true })
+  vaultId?: string
 }

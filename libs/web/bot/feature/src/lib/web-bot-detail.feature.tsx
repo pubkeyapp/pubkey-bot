@@ -2,6 +2,7 @@ import { Avatar, Group } from '@mantine/core'
 import { useUserFindOneBot } from '@pubkey-bot/web/bot/data-access'
 import { UiError, UiLoader, UiPageHeader, UiStack, UiTabRoutes } from '@pubkey-bot/web/ui/core'
 import { useParams } from 'react-router-dom'
+import { WebBotOverviewFeature } from './web-bot-overview-feature'
 import { WebBotVerificationFeature } from './web-bot-verification-feature'
 
 export function WebBotDetailFeature() {
@@ -27,6 +28,11 @@ export function WebBotDetailFeature() {
       />
       <UiTabRoutes
         tabs={[
+          {
+            value: 'overview',
+            label: 'Overview',
+            component: <WebBotOverviewFeature bot={bot} />,
+          },
           {
             value: 'verification',
             label: 'Verification',

@@ -89,11 +89,11 @@ export class ApiBotUserService {
       include: { collection: true },
     })
 
-    const collectionAccounts = connections.map((connection) => connection.collection?.account)
+    const collections = connections.map((connection) => connection.collection)
 
     const assets: CollectionAsset[] = await this.getCachedAssets({
       identities,
-      collectionAccounts,
+      collections,
     })
 
     const result = connections.map((connection) => ({
@@ -120,9 +120,13 @@ export class ApiBotUserService {
     }
 
     if (Object.keys(newSummary).length > 0 && hasDifference) {
+      console.log({
+        summary,
+        newSummary,
+      })
       const instance = await this.getUserInstance(userId)
       const updated = await instance.put(`/users/@me/applications/${botId}/role-connection`, {
-        body: { platform_name: bot.name, metadata: newSummary },
+        body: { platform_name: bot.name, metadata: { ...summary, ...newSummary } },
       })
       if (updated) {
         this.logger.verbose(`Updated user role connection for bot ${botId}`)
@@ -138,22 +142,29 @@ export class ApiBotUserService {
 
   private async getCachedAssets({
     identities,
-    collectionAccounts,
+    collections,
   }: {
     identities: { providerId: string; provider: IdentityProvider }[]
-    collectionAccounts: string[]
+    collections: Collection[]
   }): Promise<CollectionAsset[]> {
-    const key = `${identities.map((i) => i.providerId).join(',')}-${collectionAccounts.join(',')}`
+    const key = `${identities.map((i) => i.providerId).join(',')}-${collections
+      .map(({ account }) => account)
+      .join(',')}`
     if (!this.collectionAssetCache.has(key)) {
       this.logger.verbose(`Fetching collection assets for ${key}`)
       const assets: CollectionAsset[] = []
       for (const identity of identities) {
-        const collectionAssets = await this.network.getCollectionAssetsByOwner(
-          'SolanaMainnet',
-          identity.providerId,
-          collectionAccounts,
-        )
-        assets.push(...collectionAssets)
+        const collectionAssets = await this.network.getOwnedAndStakedAssets({
+          ownerAccount: identity.providerId,
+          collectionMap: {
+            SolanaMainnet: collections.map(({ account, vaultId }) => ({
+              account,
+              vaultId: vaultId ? vaultId : undefined,
+            })),
+            SolanaDevnet: [],
+          },
+        })
+        assets.push(...collectionAssets.SolanaMainnet)
       }
       if (assets.length) {
         this.collectionAssetCache.set(key, assets)

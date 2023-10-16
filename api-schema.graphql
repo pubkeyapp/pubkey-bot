@@ -99,6 +99,7 @@ input AdminUpdateCollectionInput {
   metadataUrl: String
   name: String
   symbol: String
+  vaultId: String
 }
 
 input AdminUpdateConnectionInput {
@@ -170,6 +171,7 @@ type Collection {
   network: NetworkType!
   symbol: String
   updatedAt: DateTime
+  vaultId: String
 }
 
 type CollectionAsset {
