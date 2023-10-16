@@ -4,7 +4,7 @@ import { ellipsify, Identity, IdentityProvider } from '@pubkey-bot/sdk'
 import { useIdentitySolana } from '@pubkey-bot/web/identity/data-access'
 import { UiStack, UiWarn } from '@pubkey-bot/web/ui/core'
 import { showNotificationError } from '@pubkey-bot/web/ui/notifications'
-import { WalletMultiButton } from '@pubkeyapp/wallet-adapter-mantine-ui'
+import { WalletDisconnectButton, WalletMultiButton } from '@pubkeyapp/wallet-adapter-mantine-ui'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -48,6 +48,7 @@ export function IdentityUiSolanaVerifyWizard({ identity, refresh }: { identity: 
       >
         <UiStack>
           <WalletMultiButton size="lg" />
+          <WalletDisconnectButton size="lg" />
         </UiStack>
       </Stepper.Step>
       <Stepper.Step

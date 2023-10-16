@@ -1,0 +1,44 @@
+fragment ConnectionDetails on Connection {
+  botId
+  collectionId
+  collection {
+    ...CollectionDetails
+  }
+  createdAt
+  id
+  key
+  updatedAt
+}
+
+query adminFindManyConnection($input: AdminFindManyConnectionInput!) {
+  paging: adminFindManyConnection(input: $input) {
+    data {
+      ...ConnectionDetails
+    }
+    meta {
+      ...PagingMetaDetails
+    }
+  }
+}
+
+query adminFindOneConnection($connectionId: String!) {
+  item: adminFindOneConnection(connectionId: $connectionId) {
+    ...ConnectionDetails
+  }
+}
+
+mutation adminCreateConnection($input: AdminCreateConnectionInput!) {
+  created: adminCreateConnection(input: $input) {
+    ...ConnectionDetails
+  }
+}
+
+mutation adminUpdateConnection($connectionId: String!, $input: AdminUpdateConnectionInput!) {
+  updated: adminUpdateConnection(connectionId: $connectionId, input: $input) {
+    ...ConnectionDetails
+  }
+}
+
+mutation adminDeleteConnection($connectionId: String!) {
+  deleted: adminDeleteConnection(connectionId: $connectionId)
+}

@@ -20,6 +20,12 @@ input AdminCreateCollectionInput {
   network: NetworkType!
 }
 
+input AdminCreateConnectionInput {
+  botId: String!
+  collectionId: String!
+  key: String!
+}
+
 input AdminCreateEmailInput {
   email: String!
   ownerId: String!
@@ -52,6 +58,12 @@ input AdminFindManyCollectionInput {
   limit: Int = 10
   page: Int = 1
   search: String
+}
+
+input AdminFindManyConnectionInput {
+  botId: String!
+  limit: Int = 10
+  page: Int = 1
 }
 
 input AdminFindManyEmailInput {
@@ -87,6 +99,10 @@ input AdminUpdateCollectionInput {
   metadataUrl: String
   name: String
   symbol: String
+}
+
+input AdminUpdateConnectionInput {
+  key: String
 }
 
 input AdminUpdateEmailInput {
@@ -144,6 +160,7 @@ enum BotStatus {
 
 type Collection {
   account: String!
+  assets: [CollectionAsset!]
   createdAt: DateTime
   description: String
   id: String!
@@ -155,8 +172,48 @@ type Collection {
   updatedAt: DateTime
 }
 
+type CollectionAsset {
+  account: String
+  attributeMap: JSON
+  attributes: [CollectionAssetAttribute!]
+  createdAt: DateTime
+  id: String
+  image: String
+  metadata: JSON
+  name: String!
+  network: NetworkType
+  owner: String
+  raw: JSON
+  symbol: String
+  updatedAt: DateTime
+}
+
+type CollectionAssetAttribute {
+  count: Int
+  createdAt: DateTime
+  id: String
+  key: String!
+  updatedAt: DateTime
+  value: String!
+}
+
 type CollectionPaging {
   data: [Collection!]!
+  meta: PagingMeta!
+}
+
+type Connection {
+  botId: String!
+  collection: Collection
+  collectionId: String!
+  createdAt: DateTime
+  id: String!
+  key: String!
+  updatedAt: DateTime
+}
+
+type ConnectionPaging {
+  data: [Connection!]!
   meta: PagingMeta!
 }
 
@@ -166,8 +223,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type DiscordRoleConnection {
+  collection: Collection
   description: String!
   key: String!
+  metadata: String
   name: String!
   type: DiscordRoleConnectionType!
 }
@@ -258,18 +317,21 @@ input LoginInput {
 type Mutation {
   adminCreateBot(input: AdminCreateBotInput!): Bot
   adminCreateCollection(input: AdminCreateCollectionInput!): Collection
+  adminCreateConnection(input: AdminCreateConnectionInput!): Connection
   adminCreateEmail(input: AdminCreateEmailInput!): Email
   adminCreateIdentity(input: AdminCreateIdentityInput!): Identity
   adminCreateNetwork(input: AdminCreateNetworkInput!): Network
   adminCreateUser(input: AdminCreateUserInput!): User
   adminDeleteBot(botId: String!): Boolean
   adminDeleteCollection(collectionId: String!): Boolean
+  adminDeleteConnection(connectionId: String!): Boolean
   adminDeleteEmail(emailId: String!): Boolean
   adminDeleteIdentity(identityId: String!): Boolean
   adminDeleteNetwork(networkId: String!): Boolean
   adminDeleteUser(userId: String!): Boolean
   adminUpdateBot(botId: String!, input: AdminUpdateBotInput!): Bot
   adminUpdateCollection(collectionId: String!, input: AdminUpdateCollectionInput!): Collection
+  adminUpdateConnection(connectionId: String!, input: AdminUpdateConnectionInput!): Connection
   adminUpdateEmail(emailId: String!, input: AdminUpdateEmailInput!): Email
   adminUpdateNetwork(input: AdminUpdateNetworkInput!, networkId: String!): Network
   adminUpdateUser(input: AdminUpdateUserInput!, userId: String!): User
@@ -319,12 +381,14 @@ type PagingMeta {
 type Query {
   adminFindManyBot(input: AdminFindManyBotInput!): BotPaging
   adminFindManyCollection(input: AdminFindManyCollectionInput!): CollectionPaging
+  adminFindManyConnection(input: AdminFindManyConnectionInput!): ConnectionPaging
   adminFindManyEmail(input: AdminFindManyEmailInput!): [Email!]
   adminFindManyIdentity(input: AdminFindManyIdentityInput!): [Identity!]
   adminFindManyNetwork(input: AdminFindManyNetworkInput!): NetworkPaging
   adminFindManyUser(input: AdminFindManyUserInput!): UserPaging
   adminFindOneBot(botId: String!): Bot
   adminFindOneCollection(collectionId: String!): Collection
+  adminFindOneConnection(connectionId: String!): Connection
   adminFindOneNetwork(networkId: String!): Network
   adminFindOneUser(userId: String!): User
   appConfig: AppConfig!
@@ -336,7 +400,11 @@ type Query {
   uptime: Float!
   userFindManyIdentity: [Identity!]
   userFindManyUser(input: UserFindManyUserInput!): UserPaging
+  userFindOneBot(botId: String!): Bot
   userFindOneUser(username: String!): User
+  userGetBotCollectionAssets(botId: String!): [Collection!]
+  userGetBotRoleConnections(botId: String!): [DiscordRoleConnection!]
+  userGetBotRoles(botId: String!, serverId: String!): [DiscordServerRole!]
   userRequestIdentityChallenge(input: RequestIdentityChallengeInput!): IdentityChallenge
 }
 

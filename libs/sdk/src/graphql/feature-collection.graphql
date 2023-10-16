@@ -9,6 +9,28 @@ fragment CollectionDetails on Collection {
   network
   symbol
   updatedAt
+  assets {
+    ...CollectionAssetDetails
+  }
+}
+
+fragment CollectionAssetDetails on CollectionAsset {
+  id
+  createdAt
+  updatedAt
+  name
+  network
+  account
+  owner
+  image
+  attributeMap
+  attributes {
+    key
+    value
+    count
+  }
+  metadata
+  symbol
 }
 
 query adminFindManyCollection($input: AdminFindManyCollectionInput!) {

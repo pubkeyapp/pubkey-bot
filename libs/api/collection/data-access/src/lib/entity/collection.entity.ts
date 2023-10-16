@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { NetworkType } from '@pubkey-bot/api/network/data-access'
+import { CollectionAsset } from './collection-asset.entity'
 
 @ObjectType()
 export class Collection {
@@ -23,4 +24,6 @@ export class Collection {
   imageUrl?: string | null
   @Field({ nullable: true })
   metadataUrl?: string | null
+  @Field(() => [CollectionAsset], { nullable: true })
+  assets?: CollectionAsset[] | null
 }

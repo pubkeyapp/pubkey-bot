@@ -6,6 +6,7 @@ import { UiContainer, UiDashboard, UiNotFound } from '@pubkey-bot/web/ui/core'
 import { WebAdminUserRoutes } from '@pubkey-bot/web/user/feature'
 import { IconBug, IconNetwork, IconRobot, IconStack2, IconUsers } from '@tabler/icons-react'
 import { Navigate, useRoutes } from 'react-router-dom'
+import { WebAdminConnectionRoutes } from '@pubkey-bot/web/connection/feature'
 
 export default function WebAdminRoutes() {
   return useRoutes([
@@ -21,6 +22,7 @@ export default function WebAdminRoutes() {
               { label: 'Development', icon: IconBug, link: '/admin/development' },
               { label: 'Networks', icon: IconNetwork, link: '/admin/networks' },
               { label: 'Users', icon: IconUsers, link: '/admin/users' },
+              { label: 'Connections', icon: IconUsers, link: '/admin/connections' },
               // GENERATE_ADMIN_DASHBOARD_LINK
             ]}
           />
@@ -32,6 +34,7 @@ export default function WebAdminRoutes() {
     { path: 'development/*', element: <WebDevAdminRoutes /> },
     { path: 'networks/*', element: <WebAdminNetworkRoutes /> },
     { path: 'users/*', element: <WebAdminUserRoutes /> },
+    { path: 'connections/*', element: <WebAdminConnectionRoutes /> },
     // GENERATE_ADMIN_DASHBOARD_ROUTE
     { path: '*', element: <UiNotFound /> },
   ])

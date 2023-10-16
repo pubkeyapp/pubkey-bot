@@ -1,5 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { RESTDiscordRoleConnection } from '@pubkey-bot/api/bot/util'
+import { Collection } from '@pubkey-bot/api/collection/data-access'
+import { Connection } from '@pubkey-bot/api/connection/data-access'
 import {
   convertDiscordRoleConnectionTypeToNumber,
   convertNumberToDiscordRoleConnectionType,
@@ -16,6 +18,10 @@ export class DiscordRoleConnection {
   description!: string
   @Field(() => DiscordRoleConnectionType)
   type!: DiscordRoleConnectionType
+  @Field(() => Collection, { nullable: true })
+  collection?: Collection
+  @Field({ nullable: true })
+  metadata?: string | null
 }
 
 export function convertFromRESTDiscordRoleConnection(role: RESTDiscordRoleConnection): DiscordRoleConnection {

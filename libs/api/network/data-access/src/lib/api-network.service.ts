@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { NetworkType } from '@prisma/client'
+import { NetworkType, Prisma } from '@prisma/client'
+import { CollectionAsset } from '@pubkey-bot/api/collection/data-access'
 import { ApiCoreService } from '@pubkey-bot/api/core/data-access'
-import { HeliusClient } from '@pubkey-bot/api/network/util'
+import { getAttributeMap, HeliusClient } from '@pubkey-bot/api/network/util'
+import { DAS } from 'helius-sdk'
 import { ApiNetworkAdminService } from './api-network-admin.service'
 import { convertNetworkType } from './helpers/convert-network-type'
 
@@ -10,6 +12,43 @@ export class ApiNetworkService {
   private readonly clients = new Map<NetworkType, HeliusClient>()
 
   constructor(private readonly core: ApiCoreService, readonly admin: ApiNetworkAdminService) {}
+
+  async getCollectionAssetsByOwner(network: NetworkType, ownerAccount: string, collectionAccounts: string[]) {
+    const client = await this.ensureClient(network)
+
+    const assets = await client.getCollectionAssetsByOwner({ ownerAccount, collectionAccounts })
+
+    return assets.map((asset) => this.convertDasToAsset({ network, asset }))
+  }
+
+  private convertDasToAsset({
+    network,
+    asset,
+  }: {
+    network: NetworkType
+    asset: DAS.GetAssetResponse
+  }): CollectionAsset {
+    const collectionAccount = asset.grouping?.find((g) => g.group_key === 'collection')?.group_value?.toString()
+
+    if (!collectionAccount) {
+      throw new Error(`Asset ${asset.id} has no collection`)
+    }
+
+    const { attributes, attributeMap } = getAttributeMap(asset.content?.metadata)
+
+    return {
+      network,
+      account: asset.id,
+      name: asset?.content?.metadata?.name ?? asset.id,
+      metadata: asset.content?.metadata as unknown as Prisma.JsonObject,
+      attributes: attributes,
+      image: asset.content?.files?.[0]?.uri,
+      attributeMap,
+      owner: asset.ownership?.owner,
+      collection: collectionAccount,
+      raw: asset as unknown as Prisma.JsonObject,
+    }
+  }
 
   async getTokenMetadata(network: NetworkType, account: string) {
     const client = await this.ensureClient(network)

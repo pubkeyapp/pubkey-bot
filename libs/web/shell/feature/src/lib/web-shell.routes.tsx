@@ -1,4 +1,5 @@
 import { WebAuthLoginFeature, WebAuthRegisterFeature } from '@pubkey-bot/web/auth/feature'
+import { WebBotRoutes } from '@pubkey-bot/web/bot/feature'
 import { WebDashboardRoutes } from '@pubkey-bot/web/dashboard/feature'
 import { WebHomeRoutes } from '@pubkey-bot/web/home/feature'
 import { WebProfileRoutes } from '@pubkey-bot/web/profile/feature'
@@ -21,6 +22,7 @@ export function WebShellRoutes() {
     ],
     layout: [
       // Here you can add routes that are part of the main layout
+      { path: '/bot/*', element: <WebBotRoutes /> },
       { path: '/dashboard', element: <WebDashboardRoutes /> },
       { path: '/profile/*', element: <WebProfileRoutes /> },
       { path: '/settings/*', element: <WebSettingsRoutes /> },

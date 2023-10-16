@@ -148,7 +148,7 @@ export class ApiBotManagerService implements OnModuleInit {
   }
 
   verificationUrl(botId: string) {
-    return `${this.core.config.apiUrl}/bot/${botId}/verification`
+    return `${this.core.config.webUrl}/bot/${botId}/verification`
   }
 
   getBotInstance(botId: string, { throwIfNotStarted = true } = {}) {

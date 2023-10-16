@@ -1,0 +1,16 @@
+{
+  "name": "web-connection-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/connection/ui/src",
+  "projectType": "library",
+  "tags": ["app:web", "type:ui"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/web/connection/ui/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

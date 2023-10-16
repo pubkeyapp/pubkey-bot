@@ -17,8 +17,10 @@ export function useAdminFindManyCollection(props?: Partial<AdminFindManyCollecti
     sdk.adminFindManyCollection({ input }).then((res) => res.data),
   )
   const total = query.data?.paging?.meta?.totalCount ?? 0
+  const items = query.data?.paging?.data ?? []
 
   return {
+    items,
     createCollection: (input: AdminCreateCollectionInput) =>
       sdk
         .adminCreateCollection({ input })

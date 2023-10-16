@@ -34,6 +34,7 @@ fragment DiscordRoleConnectionDetails on DiscordRoleConnection {
   name
   type
   description
+  metadata
 }
 
 query adminFindManyBot($input: AdminFindManyBotInput!) {
@@ -114,5 +115,35 @@ mutation managerAddBotRoleConnection($botId: String!, $input: AddBotRoleConnecti
 mutation managerRemoveBotRoleConnection($botId: String!, $key: String!) {
   items: managerRemoveBotRoleConnection(botId: $botId, key: $key) {
     ...DiscordRoleConnectionDetails
+  }
+}
+
+query userFindOneBot($botId: String!) {
+  item: userFindOneBot(botId: $botId) {
+    ...BotDetails
+  }
+}
+
+query userGetBotRoleConnections($botId: String!) {
+  items: userGetBotRoleConnections(botId: $botId) {
+    ...DiscordRoleConnectionDetails
+    collection {
+      ...CollectionDetails
+    }
+  }
+}
+
+query userGetBotRoles($botId: String!, $serverId: String!) {
+  items: userGetBotRoles(botId: $botId, serverId: $serverId) {
+    ...DiscordServerRoleDetails
+  }
+}
+
+query userGetBotCollectionAssets($botId: String!) {
+  items: userGetBotCollectionAssets(botId: $botId) {
+    ...CollectionDetails
+    assets {
+      ...CollectionAssetDetails
+    }
   }
 }

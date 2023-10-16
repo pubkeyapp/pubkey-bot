@@ -68,6 +68,7 @@
     "joi": "^17.10.1",
     "linkify-react": "^4.1.1",
     "linkifyjs": "^4.1.1",
+    "lru-cache": "^10.0.1",
     "mantine-datatable": "^2.9.13",
     "oceanic.js": "^1.8.0",
     "passport": "^0.6.0",

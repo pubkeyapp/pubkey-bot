@@ -1,15 +1,29 @@
-import { Button, Select, Table, TextInput } from '@mantine/core'
+import { Button, Group, Select, Table, Text, TextInput } from '@mantine/core'
+import { modals } from '@mantine/modals'
 import { AddBotRoleConnectionInput, Bot, DiscordRoleConnectionType, getEnumOptions } from '@pubkey-bot/sdk'
 import { useManagerGetBotRoleConnections } from '@pubkey-bot/web/bot/data-access'
+import { WebUiCollectionAvatar } from '@pubkey-bot/web/collection/ui'
+import { useAdminFindManyConnection } from '@pubkey-bot/web/connection/data-access'
 import { useWebSdk } from '@pubkey-bot/web/shell/data-access'
-import { UiActionIcon, UiAlert, UiCard, UiLoader, UiStack, UiWarn } from '@pubkey-bot/web/ui/core'
+import { UiActionIcon, UiAlert, UiCard, UiDebug, UiLoader, UiStack, UiWarn } from '@pubkey-bot/web/ui/core'
 import { showNotificationError, showNotificationSuccess } from '@pubkey-bot/web/ui/notifications'
-import { IconTrash } from '@tabler/icons-react'
+import {
+  IconEqual,
+  IconEqualNot,
+  IconMathEqualGreater,
+  IconMathEqualLower,
+  IconMathIntegral,
+  IconMathNot,
+  IconNumber,
+  IconTrash,
+} from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
+import { ConnectConnectionModal } from './connect-connection-modal'
 
 export function WebAdminUiBotRoleConnections({ bot }: { bot: Bot }) {
   const sdk = useWebSdk()
   const query = useManagerGetBotRoleConnections({ botId: bot.id })
+  const { query: connectionsQuery, items: connections } = useAdminFindManyConnection({ botId: bot.id })
   const items = query.data?.items || []
   const [name, setName] = useState<string>('')
   const [type, setType] = useState<DiscordRoleConnectionType | undefined>(undefined)
@@ -51,42 +65,104 @@ export function WebAdminUiBotRoleConnections({ bot }: { bot: Bot }) {
         <Table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Connection</th>
               <th>Type</th>
+              <th>Name</th>
               <th>Description</th>
               <th />
             </tr>
           </thead>
           <tbody>
-            {query.data?.items?.map((item) => (
-              <tr key={item.key}>
-                <td>{item.type}</td>
-                <td>{item.name}</td>
-                <td>{item.description}</td>
-                <td align="right">
-                  <UiActionIcon
-                    loading={deleting}
-                    size="xs"
-                    color="red"
-                    icon={IconTrash}
-                    onClick={() => {
-                      if (!window.confirm('Are you sure?')) return
-                      setDeleting(true)
-                      sdk
-                        .managerRemoveBotRoleConnection({ botId: bot.id, key: item.key })
-                        .then(async (res) => {
-                          showNotificationSuccess(`Role ${item.name} removed.`)
-                          await query.refetch()
-                        })
-                        .catch((err) => {
-                          showNotificationError(`Error removing role ${item.name}.`)
-                        })
-                        .finally(() => setDeleting(false))
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
+            {query.data?.items?.map((item) => {
+              const connection = connections.find((c) => c.key === item.key)
+              return (
+                <tr key={item.key}>
+                  <td>
+                    {connection?.collection?.id ? (
+                      <Group spacing="xs">
+                        <WebUiCollectionAvatar collection={connection.collection} size={32} />
+                        <Text>{connection.collection?.name}</Text>
+                        <UiActionIcon
+                          size="xs"
+                          color="red"
+                          icon={IconTrash}
+                          onClick={() => {
+                            if (!window.confirm('Are you sure?')) return
+                            setDeleting(true)
+                            sdk
+                              .managerRemoveBotRoleConnection({ botId: bot.id, key: item.key })
+                              .then(async (res) => {
+                                showNotificationSuccess(`Role ${item.name} removed.`)
+                                await query.refetch()
+                              })
+                              .catch((err) => {
+                                showNotificationError(`Error removing role ${item.name}.`)
+                              })
+                              .finally(() => setDeleting(false))
+                          }}
+                        />
+                      </Group>
+                    ) : (
+                      <Button
+                        fullWidth
+                        variant="light"
+                        size="xs"
+                        onClick={() =>
+                          modals.open({
+                            title: 'Connect Collection',
+                            children: (
+                              <div>
+                                <ConnectConnectionModal
+                                  submit={async (data) => {
+                                    return sdk.adminCreateConnection({ input: data }).then(async () => {
+                                      showNotificationSuccess(`Connection created.`)
+                                      await query.refetch()
+                                      await connectionsQuery.refetch()
+                                      modals.closeAll()
+                                      return
+                                    })
+                                  }}
+                                  bot={bot}
+                                  connection={item}
+                                />
+                              </div>
+                            ),
+                          })
+                        }
+                      >
+                        Add
+                      </Button>
+                    )}
+                  </td>
+                  <td>{getRoleConnectionType(item.type)}</td>
+                  <td>{item.name}</td>
+                  <td>{item.description}</td>
+                  <td align="right">
+                    <UiActionIcon
+                      loading={deleting}
+                      size="xs"
+                      color="red"
+                      disabled={!!connection?.collection?.id}
+                      icon={IconTrash}
+                      onClick={() => {
+                        if (!window.confirm('Are you sure?')) return
+                        setDeleting(true)
+                        sdk
+                          .managerRemoveBotRoleConnection({ botId: bot.id, key: item.key })
+                          .then(async (res) => {
+                            showNotificationSuccess(`Role ${item.name} removed.`)
+                            await query.refetch()
+                          })
+                          .catch((err) => {
+                            showNotificationError(`Error removing role ${item.name}.`)
+                          })
+                          .finally(() => setDeleting(false))
+                      }}
+                    />
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </Table>
       </UiCard>
@@ -159,4 +235,60 @@ function nameToKey(name: string): string {
 
   // Ensure the key is at most 50 characters long
   return key.substring(0, 50)
+}
+
+function getRoleConnectionType(type: DiscordRoleConnectionType) {
+  switch (type) {
+    case DiscordRoleConnectionType.BooleanEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Boolean Equal
+        </Text>
+      )
+    case DiscordRoleConnectionType.BooleanNotEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Boolean Not Equal
+        </Text>
+      )
+    case DiscordRoleConnectionType.DateTimeGreaterThanOrEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Date Time Equal or Greater
+        </Text>
+      )
+    case DiscordRoleConnectionType.DateTimeLessThanOrEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Date Time Equal or Lower
+        </Text>
+      )
+    case DiscordRoleConnectionType.IntegerEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Int. Equal
+        </Text>
+      )
+    case DiscordRoleConnectionType.IntegerGreaterThanOrEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Int. Equal or Greater
+        </Text>
+      )
+    case DiscordRoleConnectionType.IntegerLessThanOrEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          Int. Equal or Lower
+        </Text>
+      )
+    case DiscordRoleConnectionType.IntegerNotEqual:
+      return (
+        <Text size="xs" color="dimmed">
+          IntegerNotEqual
+        </Text>
+      )
+
+    default:
+      return type
+  }
 }

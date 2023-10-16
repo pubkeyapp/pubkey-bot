@@ -9,6 +9,7 @@ import { ApiNetworkFeatureModule } from '@pubkey-bot/api/network/feature'
 import { ApiUserFeatureModule } from '@pubkey-bot/api/user/feature'
 import { ApiCoreController } from './api-core.controller'
 import { ApiCoreResolver } from './api-core.resolver'
+import { ApiConnectionFeatureModule } from '@pubkey-bot/api/connection/feature'
 
 const imports = [
   ApiAuthFeatureModule,
@@ -19,6 +20,7 @@ const imports = [
   ApiIdentityFeatureModule,
   ApiNetworkFeatureModule,
   ApiUserFeatureModule,
+  ApiConnectionFeatureModule,
 ]
 
 @Module({

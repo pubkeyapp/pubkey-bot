@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 import { ApiCoreService } from '@pubkey-bot/api/core/data-access'
 import { ApiBotAdminService } from './api-bot-admin.service'
 import { ApiBotManagerService } from './api-bot-manager.service'
+import { ApiBotUserService } from './api-bot-user.service'
 
 @Injectable()
 export class ApiBotService implements OnModuleInit {
@@ -10,6 +11,7 @@ export class ApiBotService implements OnModuleInit {
     private readonly core: ApiCoreService,
     readonly admin: ApiBotAdminService,
     readonly manager: ApiBotManagerService,
+    readonly user: ApiBotUserService,
   ) {}
 
   async onModuleInit() {

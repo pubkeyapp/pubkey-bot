@@ -1,0 +1,16 @@
+{
+  "name": "web-connection-feature",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/connection/feature/src",
+  "projectType": "library",
+  "tags": ["app:web", "type:feature"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/web/connection/feature/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

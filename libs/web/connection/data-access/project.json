@@ -1,0 +1,16 @@
+{
+  "name": "web-connection-data-access",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/connection/data-access/src",
+  "projectType": "library",
+  "tags": ["app:web", "type:data-access"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/web/connection/data-access/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}
