@@ -132,6 +132,7 @@ export class ApiBotUserService {
       }
     } else {
       this.logger.verbose(`No changes to user role connection for bot ${botId}`)
+      console.log(newSummary)
     }
 
     return result
