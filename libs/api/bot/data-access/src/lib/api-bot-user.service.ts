@@ -111,9 +111,10 @@ export class ApiBotUserService {
 
     let hasDifference = false
     const remoteSummary = await this.getUserBotRoleConnection(userId, botId)
+    const remoteMetadata = remoteSummary.metadata ?? {}
 
     for (const key in summary) {
-      if (summary[key] !== remoteSummary.metadata[key]) {
+      if (summary[key] && remoteMetadata[key] && summary[key] !== remoteMetadata[key]) {
         hasDifference = true
         newSummary[key] = summary[key].toString()
       }
