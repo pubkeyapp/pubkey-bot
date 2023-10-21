@@ -114,17 +114,13 @@ export class ApiBotUserService {
     const remoteMetadata = remoteSummary.metadata ?? {}
 
     for (const key in summary) {
-      if (summary[key] && remoteMetadata[key] && summary[key] !== remoteMetadata[key]) {
+      if (summary[key] !== remoteMetadata[key]) {
         hasDifference = true
         newSummary[key] = summary[key].toString()
       }
     }
 
     if (Object.keys(newSummary).length > 0 && hasDifference) {
-      console.log({
-        summary,
-        newSummary,
-      })
       const instance = await this.getUserInstance(userId)
       const updated = await instance.put(`/users/@me/applications/${botId}/role-connection`, {
         body: { platform_name: bot.name, metadata: { ...summary, ...newSummary } },
